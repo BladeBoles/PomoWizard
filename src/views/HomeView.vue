@@ -1,50 +1,38 @@
 <script setup lang="ts">
-import { useTimer, useStopwatch } from 'vue-timer-hook'
+import { ref, watch, watchEffect } from 'vue'
+const timerEnabled = ref(true)
+const timerCount = ref(30)
 
-const time = new Date()
-time.setSeconds(time.getSeconds() + 600) // 10 minutes timer
-const timer = useTimer(time)
-const restartFive = () => {
-  // Restarts to 5 minutes timer
-  const time = new Date()
-  time.setSeconds(time.getSeconds() + 300)
-  timer.restart(time)
-}
+watch(timerEnabled, (newValue) => {
+  console.log('timerEnabled watcher, newvalue: ', newValue)
+  if (newValue) {
+    setTimeout(() => {
+      timerCount.value--
+    }, 1000)
+  }
+})
 
-const autoStart = true
-const stopwatch = useStopwatch(autoStart)
+watchEffect(() => {
+  if (timerCount.value > 0 && timerEnabled.value) {
+    console.log('current timerCount is', timerCount.value)
+    setTimeout(() => {
+      timerCount.value--
+    }, 1000)
+  }
+})
+
+const play = () => (timerEnabled.value = true)
+const pause = () => (timerEnabled.value = false)
 </script>
 
 <template>
   <main>
     <div>
-      <h1>vue-timer-hook</h1>
+      <h1>Pomodoro Timer</h1>
       <p>Timer Demo</p>
-      <div>
-        <span>{{ timer.days }}</span
-        >:<span>{{ timer.hours }}</span
-        >:<span>{{ timer.minutes }}</span
-        >:<span>{{ timer.seconds }}</span>
-      </div>
-      <p>{{ timer.isRunning ? 'Running' : 'Not running' }}</p>
-      <button @click="timer.start()">Start</button>
-      <button @click="timer.pause()">Pause</button>
-      <button @click="timer.resume()">Resume</button>
-      <button @click="restartFive()">Restart</button>
-    </div>
-    <div>
-      <h1>vue-timer-hook</h1>
-      <p>Stopwatch Demo</p>
-      <div>
-        <span>{{ stopwatch.days }}</span
-        >:<span>{{ stopwatch.hours }}</span
-        >:<span>{{ stopwatch.minutes }}</span
-        >:<span>{{ stopwatch.seconds }}</span>
-      </div>
-      <p>{{ stopwatch.isRunning ? 'Running' : 'Not running' }}</p>
-      <button @click="stopwatch.start()">Start</button>
-      <button @click="stopwatch.pause()">Pause</button>
-      <button @click="stopwatch.reset()">Reset</button>
+      {{ timerCount }}
+      <button @click="play">Play</button>
+      <button @click="pause">Pause</button>
     </div>
   </main>
 </template>
