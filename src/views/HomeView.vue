@@ -3,6 +3,7 @@ import GenericTimer from '@/components/GenericTimer.vue'
 import { ref, computed } from 'vue'
 
 const timerType = ref('Pomodoro')
+const finishedPomos = ref(0)
 const defaultTimerMinutes = computed(() => {
   let minutes = 0
   switch (timerType.value) {
@@ -22,6 +23,7 @@ const defaultTimerMinutes = computed(() => {
 
 <template>
   <h1>PomoWizard</h1>
+  <p>Finished pomodoros: {{ finishedPomos }}</p>
   <fieldset>
     <legend>Timer Type</legend>
     <input
@@ -52,5 +54,6 @@ const defaultTimerMinutes = computed(() => {
   <GenericTimer
     :default-timer-minutes="defaultTimerMinutes"
     :timer-type="timerType"
+    @finished="finishedPomos++"
   />
 </template>

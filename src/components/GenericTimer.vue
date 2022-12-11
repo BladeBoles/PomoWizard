@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onBeforeMount } from 'vue'
+import { ref, computed, watch } from 'vue'
 const timerEnabled = ref(false)
 const timerMinutes = ref(25)
 const remainingTimerSeconds = ref(1500)
@@ -15,6 +15,8 @@ const props = defineProps({
   },
   autoStartTimer: { type: Boolean, default: false }
 })
+
+const emit = defineEmits(['finished'])
 
 const startTimer = () => {
   timerEnabled.value = true
@@ -41,6 +43,10 @@ watch(remainingTimerSeconds, (newValue) => {
     setTimeout(() => {
       remainingTimerSeconds.value--
     }, 1000)
+  }
+  if (newValue === 0 && timerEnabled.value === true) {
+    timerEnabled.value = false
+    if (props.timerType === 'Pomodoro') emit('finished')
   }
 })
 watch(timerMinutes, () => {
