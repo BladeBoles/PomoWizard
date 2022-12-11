@@ -1,38 +1,70 @@
 <script setup lang="ts">
-import { ref, watch, watchEffect } from 'vue'
-const timerEnabled = ref(true)
-const timerCount = ref(30)
+import { ref, computed, watch } from 'vue'
+const timerEnabled = ref(false)
+const timerLengthInMinutes = ref(25)
+const remainingTimeInSeconds = ref(1500)
+
+const startTimer = () => {
+  timerEnabled.value = true
+}
+
+const pauseTimer = () => {
+  timerEnabled.value = false
+}
+
+const stopTimer = () => {
+  timerEnabled.value = false
+  remainingTimeInSeconds.value = timerLengthInMinutes.value * 60
+}
 
 watch(timerEnabled, (newValue) => {
-  console.log('timerEnabled watcher, newvalue: ', newValue)
-  if (newValue) {
+  if (remainingTimeInSeconds.value > 0 && newValue === true) {
     setTimeout(() => {
-      timerCount.value--
+      remainingTimeInSeconds.value--
     }, 1000)
   }
 })
-
-watchEffect(() => {
-  if (timerCount.value > 0 && timerEnabled.value) {
-    console.log('current timerCount is', timerCount.value)
+watch(remainingTimeInSeconds, (newValue) => {
+  if (newValue > 0 && timerEnabled.value === true) {
     setTimeout(() => {
-      timerCount.value--
+      remainingTimeInSeconds.value--
     }, 1000)
   }
 })
-
-const play = () => (timerEnabled.value = true)
-const pause = () => (timerEnabled.value = false)
+watch(timerLengthInMinutes, () => {
+  if (timerEnabled.value === false) {
+    remainingTimeInSeconds.value = timerLengthInMinutes.value * 60
+  }
+})
+const displayMinutes = computed(() => {
+  const minutes = Math.floor(remainingTimeInSeconds.value / 60)
+  const minutesFormatted =
+    minutes.toString().length < 2
+      ? `0${minutes.toString()}`
+      : minutes.toString()
+  return minutesFormatted
+})
+const displaySeconds = computed(() => {
+  const seconds = remainingTimeInSeconds.value % 60
+  const secondsFormatted =
+    seconds.toString().length < 2
+      ? `0${seconds.toString()}`
+      : seconds.toString()
+  return secondsFormatted
+})
 </script>
 
 <template>
   <main>
     <div>
       <h1>Pomodoro Timer</h1>
-      <p>Timer Demo</p>
-      {{ timerCount }}
-      <button @click="play">Play</button>
-      <button @click="pause">Pause</button>
+      {{ displayMinutes }} : {{ displaySeconds }}
+      <button @click="startTimer">Start Timer</button>
+      <button @click="pauseTimer">Pause Timer</button>
+      <button @click="stopTimer">Stop Timer</button>
+
+      <input id="timer-length" type="number" v-model="timerLengthInMinutes" />
+      <label for="timer-length">Timer minutes</label>
     </div>
   </main>
 </template>
