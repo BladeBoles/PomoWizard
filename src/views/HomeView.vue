@@ -63,7 +63,12 @@ const displaySeconds = computed(() => {
       <button @click="pauseTimer">Pause Timer</button>
       <button @click="stopTimer">Stop Timer</button>
 
-      <input id="timer-length" type="number" v-model="timerLengthInMinutes" />
+      <input
+        :disabled="timerEnabled"
+        id="timer-length"
+        type="number"
+        v-model="timerLengthInMinutes"
+      />
       <label for="timer-length">Timer minutes</label>
     </div>
   </main>
