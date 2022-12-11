@@ -48,6 +48,10 @@ watch(timerMinutes, () => {
     remainingTimerSeconds.value = timerMinutes.value * 60
   }
 })
+watch(props, () => {
+  timerMinutes.value = props.defaultTimerMinutes
+  timerEnabled.value = props.autoStartTimer
+})
 const displayMinutes = computed(() => {
   const minutes = Math.floor(remainingTimerSeconds.value / 60)
   const minutesFormatted =
@@ -64,18 +68,12 @@ const displaySeconds = computed(() => {
       : seconds.toString()
   return secondsFormatted
 })
-
-onBeforeMount(async () => {
-  timerMinutes.value = props.defaultTimerMinutes
-  remainingTimerSeconds.value = props.defaultTimerMinutes * 60
-  timerEnabled.value = props.autoStartTimer
-})
 </script>
 
 <template>
   <main>
     <div>
-      <h1>{{ timerType }} Timer</h1>
+      <h2>{{ timerType }} Timer</h2>
       {{ displayMinutes }} : {{ displaySeconds }}
       <button @click="startTimer">Start Timer</button>
       <button @click="pauseTimer">Pause Timer</button>
