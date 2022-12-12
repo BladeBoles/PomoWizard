@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 const timerEnabled = ref(false)
-const timerMinutes = ref(25)
 const remainingTimerSeconds = ref(1500)
 
 const props = defineProps({
-  defaultTimerMinutes: {
+  timerMinutes: {
     type: Number,
     default: 25
   },
@@ -16,10 +15,11 @@ const props = defineProps({
   autoStartTimer: { type: Boolean, default: false }
 })
 
-const emit = defineEmits(['finished'])
+const emit = defineEmits(['finished', 'started', 'stopped'])
 
 const startTimer = () => {
   timerEnabled.value = true
+  emit('started')
 }
 
 const pauseTimer = () => {
@@ -28,7 +28,8 @@ const pauseTimer = () => {
 
 const stopTimer = () => {
   timerEnabled.value = false
-  remainingTimerSeconds.value = timerMinutes.value * 60
+  remainingTimerSeconds.value = props.timerMinutes * 60
+  emit('stopped')
 }
 
 watch(timerEnabled, (newValue) => {
@@ -49,13 +50,10 @@ watch(remainingTimerSeconds, (newValue) => {
     if (props.timerType === 'Pomodoro') emit('finished')
   }
 })
-watch(timerMinutes, () => {
-  if (timerEnabled.value === false) {
-    remainingTimerSeconds.value = timerMinutes.value * 60
-  }
-})
+
 watch(props, () => {
-  timerMinutes.value = props.defaultTimerMinutes
+  console.log('props changed', props)
+  remainingTimerSeconds.value = props.timerMinutes * 60
   timerEnabled.value = props.autoStartTimer
 })
 const displayMinutes = computed(() => {
@@ -84,14 +82,6 @@ const displaySeconds = computed(() => {
       <button @click="startTimer">Start Timer</button>
       <button @click="pauseTimer">Pause Timer</button>
       <button @click="stopTimer">Stop Timer</button>
-
-      <input
-        :disabled="timerEnabled"
-        id="timer-length"
-        type="number"
-        v-model="timerMinutes"
-      />
-      <label for="timer-length">Timer minutes</label>
     </div>
   </main>
 </template>
