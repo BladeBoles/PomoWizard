@@ -70,6 +70,14 @@ const handleTimerStopped = () => {
   )
   stoppedAudio.play()
 }
+
+const handleTimerStarted = () => {
+  timerRunning.value = true
+  const startedAudio = new Audio(
+    'https://codeskulptor-demos.commondatastorage.googleapis.com/descent/gotitem.mp3'
+  )
+  startedAudio.play()
+}
 </script>
 
 <template>
@@ -167,7 +175,7 @@ const handleTimerStopped = () => {
     :auto-start-timer="autoStartTimer"
     @finished="handleTimerFinished"
     @stopped="handleTimerStopped"
-    @started="() => (timerRunning = true)"
+    @started="handleTimerStarted"
   />
   <GenericStopwatch @finished="handleStopWatchFinished" />
 </template>
