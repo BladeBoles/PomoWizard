@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue'
 const timerEnabled = ref(false)
 const remainingTimerSeconds = ref(1500)
+const timeoutID = ref()
 
 const props = defineProps({
   timerMinutes: {
@@ -32,25 +33,27 @@ const pauseTimer = () => {
 const stopTimer = () => {
   timerEnabled.value = false
   remainingTimerSeconds.value = props.timerMinutes * 60
+  emit('stopped')
 }
 const finishTimer = () => {
   timerEnabled.value = false
-  emit('finished', {
-    focusSeconds: props.timerMinutes * 60 - remainingTimerSeconds.value
-  })
+  const focusSeconds = props.timerMinutes * 60 - remainingTimerSeconds.value
   remainingTimerSeconds.value = props.timerMinutes * 60
+  emit('finished', {
+    focusSeconds
+  })
 }
 
-watch(timerEnabled, (newValue) => {
-  if (remainingTimerSeconds.value > 0 && newValue === true) {
-    setTimeout(() => {
+watch(timerEnabled, (newValue, oldValue) => {
+  if (remainingTimerSeconds.value > 0 && newValue && newValue !== oldValue) {
+    timeoutID.value = setTimeout(() => {
       remainingTimerSeconds.value--
     }, 1000)
   }
 })
 watch(remainingTimerSeconds, (newValue) => {
   if (newValue > 0 && timerEnabled.value === true) {
-    setTimeout(() => {
+    timeoutID.value = setTimeout(() => {
       remainingTimerSeconds.value--
     }, 1000)
   }
@@ -60,10 +63,14 @@ watch(remainingTimerSeconds, (newValue) => {
   }
 })
 
-watch(props, () => {
-  remainingTimerSeconds.value = props.timerMinutes * 60
-  timerEnabled.value = props.autoStartTimer
-})
+watch(
+  () => props.timerType,
+  () => {
+    clearTimeout(timeoutID.value)
+    remainingTimerSeconds.value = props.timerMinutes * 60
+    timerEnabled.value = props.autoStartTimer
+  }
+)
 const displayMinutes = computed(() => {
   const minutes = Math.floor(remainingTimerSeconds.value / 60)
   const minutesFormatted =
