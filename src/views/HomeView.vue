@@ -6,6 +6,7 @@ const timerRunning = ref(false)
 const autoStartTimer = ref(false)
 const timerType = ref('Pomodoro')
 const finishedPomos = ref(0)
+const pomosSinceLastLongBreak = ref(0)
 const pomodoroTimerMinutes = ref(25)
 const shortBreakTimerMinutes = ref(5)
 const longBreakTimerMinutes = ref(15)
@@ -27,7 +28,20 @@ const timerMinutes = computed(() => {
 })
 
 const handleTimerFinished = () => {
-  finishedPomos.value++
+  if (timerType.value === 'Short Break' || timerType.value === 'Long Break') {
+    timerType.value = 'Pomodoro'
+  } else {
+    pomosSinceLastLongBreak.value++
+    finishedPomos.value++
+
+    if (pomosSinceLastLongBreak.value > 3) {
+      timerType.value = 'Long Break'
+      pomosSinceLastLongBreak.value = 0
+    } else {
+      timerType.value = 'Short Break'
+    }
+  }
+
   timerRunning.value = false
 }
 </script>
