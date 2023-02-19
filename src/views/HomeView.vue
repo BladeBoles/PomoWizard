@@ -41,14 +41,14 @@ const handleTimerFinished = () => {
       timerType.value = 'Short Break'
     }
   }
-
-  timerRunning.value = false
+  if (!autoStartTimer.value) timerRunning.value = false
 }
 </script>
 
 <template>
   <h1>PomoWizard</h1>
   <p>Finished pomodoros: {{ finishedPomos }}</p>
+  <p>Pomos since last long break: {{ pomosSinceLastLongBreak }}</p>
   <fieldset>
     <legend>Timer Settings</legend>
     <ul class="home__timer-settings">
