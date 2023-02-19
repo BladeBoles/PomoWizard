@@ -25,6 +25,11 @@ const timerMinutes = computed(() => {
   }
   return minutes
 })
+
+const handleTimerFinished = () => {
+  finishedPomos.value++
+  timerRunning.value = false
+}
 </script>
 
 <template>
@@ -110,7 +115,7 @@ const timerMinutes = computed(() => {
     :timer-minutes="timerMinutes"
     :timer-type="timerType"
     :auto-start-timer="autoStartTimer"
-    @finished="finishedPomos++"
+    @finished="handleTimerFinished"
     @stopped="timerRunning = false"
     @started="timerRunning = true"
   />
