@@ -57,6 +57,10 @@ const handleTimerFinished = (e: any) => {
 const handleStopWatchFinished = (e: any) => {
   totalFocusMinutes.value += e.focusSeconds / 60
   totalFocusSessions.value++
+  const successAudio = new Audio(
+    'https://commondatastorage.googleapis.com/codeskulptor-assets/week7-brrring.m4a'
+  )
+  successAudio.play()
 }
 
 const handleTimerStopped = () => {
