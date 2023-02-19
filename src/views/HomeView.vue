@@ -47,11 +47,24 @@ const handleTimerFinished = (e: any) => {
     }
   }
   if (!autoStartTimer.value) timerRunning.value = false
+
+  const successAudio = new Audio(
+    'https://commondatastorage.googleapis.com/codeskulptor-assets/week7-brrring.m4a'
+  )
+  successAudio.play()
 }
 
 const handleStopWatchFinished = (e: any) => {
   totalFocusMinutes.value += e.focusSeconds / 60
   totalFocusSessions.value++
+}
+
+const handleTimerStopped = () => {
+  timerRunning.value = false
+  const stoppedAudio = new Audio(
+    'https://codeskulptor-demos.commondatastorage.googleapis.com/pang/pop.mp3'
+  )
+  stoppedAudio.play()
 }
 </script>
 
@@ -149,7 +162,7 @@ const handleStopWatchFinished = (e: any) => {
     :timer-type="timerType"
     :auto-start-timer="autoStartTimer"
     @finished="handleTimerFinished"
-    @stopped="() => (timerRunning = false)"
+    @stopped="handleTimerStopped"
     @started="() => (timerRunning = true)"
   />
   <GenericStopwatch @finished="handleStopWatchFinished" />
