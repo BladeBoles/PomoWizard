@@ -60,7 +60,9 @@ const displaySeconds = computed(() => {
       {{ displayMinutes }} : {{ displaySeconds }}
       <button @click="startWatch">Start Watch</button>
       <button @click="pauseWatch">Pause Watch</button>
-      <button @click="finishWatch">Finish Session</button>
+      <button :disabled="currentStopwatchCount < 3" @click="finishWatch">
+        Finish Session
+      </button>
     </div>
   </main>
 </template>
