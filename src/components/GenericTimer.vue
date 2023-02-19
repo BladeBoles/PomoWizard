@@ -32,7 +32,13 @@ const pauseTimer = () => {
 const stopTimer = () => {
   timerEnabled.value = false
   remainingTimerSeconds.value = props.timerMinutes * 60
-  emit('stopped')
+}
+const finishTimer = () => {
+  timerEnabled.value = false
+  emit('finished', {
+    focusSeconds: props.timerMinutes * 60 - remainingTimerSeconds.value
+  })
+  remainingTimerSeconds.value = props.timerMinutes * 60
 }
 
 watch(timerEnabled, (newValue) => {
@@ -84,6 +90,7 @@ const displaySeconds = computed(() => {
       <button @click="startTimer">Start Timer</button>
       <button @click="pauseTimer">Pause Timer</button>
       <button @click="stopTimer">Stop Timer</button>
+      <button @click="finishTimer">Finish Timer Early</button>
     </div>
   </main>
 </template>
