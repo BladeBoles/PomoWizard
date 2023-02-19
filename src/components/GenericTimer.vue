@@ -10,7 +10,10 @@ const props = defineProps({
   },
   timerType: {
     type: String,
-    default: 'Pomodoro'
+    default: 'Pomodoro',
+    validator(value: string) {
+      return ['Pomodoro', 'Short Break', 'Long Break'].includes(value)
+    }
   },
   autoStartTimer: { type: Boolean, default: false }
 })
@@ -47,7 +50,7 @@ watch(remainingTimerSeconds, (newValue) => {
   }
   if (newValue === 0 && timerEnabled.value === true) {
     timerEnabled.value = false
-    if (props.timerType === 'Pomodoro') emit('finished')
+    emit('finished')
   }
 })
 
