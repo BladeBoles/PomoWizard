@@ -28,6 +28,11 @@ const startTimer = () => {
 
 const pauseTimer = () => {
   timerEnabled.value = false
+
+  const pausedAudio = new Audio(
+    'https://codeskulptor-demos.commondatastorage.googleapis.com/pang/arrow.mp3'
+  )
+  pausedAudio.play()
 }
 
 const stopTimer = () => {
