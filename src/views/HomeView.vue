@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import GenericTimer from '@/components/GenericTimer.vue'
+import GenericStopwatch from '@/components/GenericStopwatch.vue'
 import { ref, computed } from 'vue'
 
 const timerRunning = ref(false)
@@ -10,6 +11,7 @@ const pomosSinceLastLongBreak = ref(0)
 const pomodoroTimerMinutes = ref(25)
 const shortBreakTimerMinutes = ref(5)
 const longBreakTimerMinutes = ref(15)
+const totalFocusMinutes = ref(0)
 
 const timerMinutes = computed(() => {
   let minutes = 0
@@ -27,7 +29,9 @@ const timerMinutes = computed(() => {
   return minutes
 })
 
-const handleTimerFinished = () => {
+const handleTimerFinished = (e: any) => {
+  totalFocusMinutes.value += e.focusSeconds / 60
+
   if (timerType.value === 'Short Break' || timerType.value === 'Long Break') {
     timerType.value = 'Pomodoro'
   } else {
@@ -43,12 +47,17 @@ const handleTimerFinished = () => {
   }
   if (!autoStartTimer.value) timerRunning.value = false
 }
+
+const handleStopWatchFinished = (e: any) => {
+  totalFocusMinutes.value += e.focusSeconds / 60
+}
 </script>
 
 <template>
   <h1>PomoWizard</h1>
   <p>Finished pomodoros: {{ finishedPomos }}</p>
   <p>Pomos since last long break: {{ pomosSinceLastLongBreak }}</p>
+  <p>Total focus minutes: {{ totalFocusMinutes.toFixed(2) }}</p>
   <fieldset>
     <legend>Timer Settings</legend>
     <ul class="home__timer-settings">
@@ -130,9 +139,10 @@ const handleTimerFinished = () => {
     :timer-type="timerType"
     :auto-start-timer="autoStartTimer"
     @finished="handleTimerFinished"
-    @stopped="timerRunning = false"
-    @started="timerRunning = true"
+    @stopped="() => (timerRunning = false)"
+    @started="() => (timerRunning = true)"
   />
+  <GenericStopwatch @finished="handleStopWatchFinished" />
 </template>
 <style scoped>
 .home__timer-settings {
