@@ -52,7 +52,6 @@ watch(remainingTimerSeconds, (newValue) => {
 })
 
 watch(props, () => {
-  console.log('props changed', props)
   remainingTimerSeconds.value = props.timerMinutes * 60
   timerEnabled.value = props.autoStartTimer
 })
