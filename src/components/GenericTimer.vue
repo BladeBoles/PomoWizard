@@ -16,7 +16,8 @@ const props = defineProps({
       return ['Pomodoro', 'Short Break', 'Long Break'].includes(value)
     }
   },
-  autoStartTimer: { type: Boolean, default: false }
+  autoStartTimer: { type: Boolean, default: false },
+  playTimerSounds: { type: Boolean, required: true }
 })
 
 const emit = defineEmits(['finished', 'started', 'stopped'])
@@ -29,10 +30,12 @@ const startTimer = () => {
 const pauseTimer = () => {
   timerEnabled.value = false
 
-  const pausedAudio = new Audio(
-    'https://codeskulptor-demos.commondatastorage.googleapis.com/pang/arrow.mp3'
-  )
-  pausedAudio.play()
+  if (props.playTimerSounds) {
+    const pausedAudio = new Audio(
+      'https://codeskulptor-demos.commondatastorage.googleapis.com/pang/arrow.mp3'
+    )
+    pausedAudio.play()
+  }
 }
 
 const stopTimer = () => {
