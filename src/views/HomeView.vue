@@ -13,6 +13,7 @@ const shortBreakTimerMinutes = ref(5)
 const longBreakTimerMinutes = ref(15)
 const totalFocusMinutes = ref(0)
 const totalFocusSessions = ref(0)
+const playTimerSounds = ref(false)
 
 const timerMinutes = computed(() => {
   let minutes = 0
@@ -48,35 +49,44 @@ const handleTimerFinished = (e: any) => {
   }
   if (!autoStartTimer.value) timerRunning.value = false
 
-  const successAudio = new Audio(
-    'https://commondatastorage.googleapis.com/codeskulptor-assets/week7-brrring.m4a'
-  )
-  successAudio.play()
+  if (playTimerSounds.value) {
+    // TODO: replace these with something a little better
+    const successAudio = new Audio(
+      'https://commondatastorage.googleapis.com/codeskulptor-assets/week7-brrring.m4a'
+    )
+    successAudio.play()
+  }
 }
 
 const handleStopWatchFinished = (e: any) => {
   totalFocusMinutes.value += e.focusSeconds / 60
   totalFocusSessions.value++
-  const successAudio = new Audio(
-    'https://commondatastorage.googleapis.com/codeskulptor-assets/week7-brrring.m4a'
-  )
-  successAudio.play()
+  if (playTimerSounds.value) {
+    const successAudio = new Audio(
+      'https://commondatastorage.googleapis.com/codeskulptor-assets/week7-brrring.m4a'
+    )
+    successAudio.play()
+  }
 }
 
 const handleTimerStopped = () => {
   timerRunning.value = false
-  const stoppedAudio = new Audio(
-    'https://codeskulptor-demos.commondatastorage.googleapis.com/pang/pop.mp3'
-  )
-  stoppedAudio.play()
+  if (playTimerSounds.value) {
+    const stoppedAudio = new Audio(
+      'https://codeskulptor-demos.commondatastorage.googleapis.com/pang/pop.mp3'
+    )
+    stoppedAudio.play()
+  }
 }
 
 const handleTimerStarted = () => {
   timerRunning.value = true
-  const startedAudio = new Audio(
-    'https://codeskulptor-demos.commondatastorage.googleapis.com/descent/gotitem.mp3'
-  )
-  startedAudio.play()
+  if (playTimerSounds.value) {
+    const startedAudio = new Audio(
+      'https://codeskulptor-demos.commondatastorage.googleapis.com/descent/gotitem.mp3'
+    )
+    startedAudio.play()
+  }
 }
 </script>
 
@@ -140,6 +150,22 @@ const handleTimerStarted = () => {
           >Automatically start timer when switching types</label
         >
       </li>
+      <li>
+        <h4>Timer sounds:</h4>
+        <div>
+          <input id="on" :value="true" type="radio" v-model="playTimerSounds" />
+          <label for="on">On</label>
+        </div>
+        <div>
+          <input
+            id="off"
+            :value="false"
+            type="radio"
+            v-model="playTimerSounds"
+          />
+          <label for="off">Off</label>
+        </div>
+      </li>
     </ul>
   </fieldset>
   <fieldset>
@@ -173,6 +199,7 @@ const handleTimerStarted = () => {
     :timer-minutes="timerMinutes"
     :timer-type="timerType"
     :auto-start-timer="autoStartTimer"
+    :play-timer-sounds="playTimerSounds"
     @finished="handleTimerFinished"
     @stopped="handleTimerStopped"
     @started="handleTimerStarted"
