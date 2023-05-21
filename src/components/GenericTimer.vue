@@ -79,6 +79,12 @@ watch(
     timerEnabled.value = props.autoStartTimer
   }
 )
+watch(
+  () => props.timerMinutes,
+  () => {
+    remainingTimerSeconds.value = props.timerMinutes * 60
+  }
+)
 const displayMinutes = computed(() => {
   const minutes = Math.floor(remainingTimerSeconds.value / 60)
   const minutesFormatted =
