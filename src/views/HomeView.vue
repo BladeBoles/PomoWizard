@@ -50,7 +50,7 @@ const handleTimerFinished = (e: any) => {
   if (!autoStartTimer.value) timerRunning.value = false
 
   if (playTimerSounds.value) {
-    // TODO: replace these with something a little better
+    // TODO: replace these with something a little less weird
     const successAudio = new Audio(
       'https://commondatastorage.googleapis.com/codeskulptor-assets/week7-brrring.m4a'
     )
