@@ -47,9 +47,7 @@ const finishTimer = () => {
   timerEnabled.value = false
   const focusSeconds = props.timerMinutes * 60 - remainingTimerSeconds.value
   remainingTimerSeconds.value = props.timerMinutes * 60
-  emit('finished', {
-    focusSeconds
-  })
+  emit('finished', { focusSeconds })
 }
 
 watch(timerEnabled, (newValue, oldValue) => {
@@ -67,7 +65,8 @@ watch(remainingTimerSeconds, (newValue) => {
   }
   if (newValue === 0 && timerEnabled.value === true) {
     timerEnabled.value = false
-    emit('finished')
+    const focusSeconds = props.timerMinutes * 60 - remainingTimerSeconds.value
+    emit('finished', { focusSeconds })
   }
 })
 
