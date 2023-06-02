@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+
 const timerEnabled = ref(false)
 const remainingTimerSeconds = ref(1500)
 const timeoutID = ref()
@@ -21,6 +22,57 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['finished', 'started', 'stopped'])
+
+const timerWorker = new Worker('../workers/timer-worker.js')
+
+interface TimerObject {
+  nextId: number
+  callbacks: {
+    [key: number]: { fn: any; context: any }
+  }
+  setInterval: (cb: any, interval: any, context: any) => {}
+  onMessage: (e: any) => void
+  clearInterval: (e: any) => void
+}
+
+const timerObject: TimerObject = {
+  nextId: 0,
+  callbacks: {},
+
+  setInterval: function (cb, interval, context) {
+    this.nextId++
+    const currentId = this.nextId
+    this.callbacks[currentId] = { fn: cb, context }
+
+    timerWorker.postMessage({
+      command: 'interval:start',
+      interval,
+      id: currentId
+    })
+
+    // TODO: why do we need to return this?
+    return currentId
+  },
+
+  onMessage: function (e) {
+    switch (e.data.message) {
+      case 'interval:tick': {
+        let callback = this.callbacks[e.data.id]
+        // TODO: BB wtf does this mean?
+        if (callback && callback.fn) {
+          callback.fn.apply(callback.context)
+        }
+        break
+      }
+    }
+  },
+  clearInterval: function (id) {
+    timerWorker.postMessage({
+      command: 'interval:clear',
+      id
+    })
+  }
+}
 
 const startTimer = () => {
   timerEnabled.value = true

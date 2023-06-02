@@ -1,4 +1,4 @@
-const intervalState = {}
+const runningIntervals = {}
 
 self.onmessage = function (e) {
   switch (e.data.command) {
@@ -15,16 +15,16 @@ self.onmessage = function (e) {
         id: e.data.id
       })
 
-      intervalState[e.data.id] = newInterval
+      runningIntervals[e.data.id] = newInterval
       break
     }
 
     case 'interval:clear':
-      clearInterval(intervalState[e.data.id])
+      clearInterval(runningIntervals[e.data.id])
 
       postMessage({ message: 'interval:cleared', id: e.data.id })
 
-      delete intervalState[e.data.id]
+      delete runningIntervals[e.data.id]
       break
   }
 }
