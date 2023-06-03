@@ -1,13 +1,23 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 const stopwatchRunning = ref(false)
 const currentStopwatchCount = ref(0)
 
 const emit = defineEmits(['finished', 'started', 'stopped'])
 
+const stopwatchWorker = new Worker('src/workers/simple-timer-worker.js')
+
 const startWatch = () => {
   stopwatchRunning.value = true
-  emit('started')
+  stopwatchWorker.postMessage({ message: 'start timer!!!' })
+  if (currentStopwatchCount.value === 0) emit('started')
+}
+
+stopwatchWorker.onmessage = function () {
+  currentStopwatchCount.value++
+  if (stopwatchRunning.value) {
+    startWatch()
+  }
 }
 
 const pauseWatch = () => {
@@ -19,21 +29,6 @@ const finishWatch = () => {
   emit('finished', { focusSeconds: currentStopwatchCount.value })
   currentStopwatchCount.value = 0
 }
-
-watch(stopwatchRunning, (newValue) => {
-  if (newValue) {
-    setTimeout(() => {
-      currentStopwatchCount.value++
-    }, 1000)
-  }
-})
-watch(currentStopwatchCount, () => {
-  if (stopwatchRunning.value) {
-    setTimeout(() => {
-      currentStopwatchCount.value++
-    }, 1000)
-  }
-})
 
 const displayMinutes = computed(() => {
   const minutes = Math.floor(currentStopwatchCount.value / 60)
