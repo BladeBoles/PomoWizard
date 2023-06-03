@@ -30,7 +30,7 @@ interface TimerObject {
   callbacks: {
     [key: number]: { fn: any; context: any }
   }
-  setInterval: (cb: any, interval: any, context: any) => {}
+  setInterval: (cb: any, interval: any, context?: any) => {}
   onMessage: (e: any) => void
   clearInterval: (e: any) => void
 }
@@ -40,6 +40,11 @@ const timerObject: TimerObject = {
   callbacks: {},
 
   setInterval: function (cb, interval, context) {
+    console.log(
+      '🚀 ~ file: GenericTimer.vue:76 ~ timerObject: TimerObject.cb, interval,:',
+      cb,
+      interval
+    )
     this.nextId++
     const currentId = this.nextId
     this.callbacks[currentId] = { fn: cb, context }
@@ -74,8 +79,25 @@ const timerObject: TimerObject = {
   }
 }
 
-const startTimer = () => {
-  timerEnabled.value = true
+// Lets the handler function utilize the scope "this" has inside the object
+timerWorker.onmessage = timerObject.onMessage.bind(timerObject)
+
+console.log('🚀 ~ file: GenericTimer.vue:27 ~ timerWorker:', timerWorker)
+
+const startTimer = async () => {
+  console.log('starting timer!', remainingTimerSeconds.value)
+  if (remainingTimerSeconds.value > 0) {
+    timerEnabled.value = true
+
+    const subtractSecondAndRestart = () => {
+      console.log('subtract and restart!')
+      remainingTimerSeconds.value--
+      if (remainingTimerSeconds.value > 0) {
+        startTimer()
+      }
+    }
+    timerObject.setInterval(subtractSecondAndRestart, 1000)
+  }
   emit('started')
 }
 
@@ -102,19 +124,19 @@ const finishTimer = () => {
   emit('finished', { focusSeconds })
 }
 
-watch(timerEnabled, (newValue, oldValue) => {
-  if (remainingTimerSeconds.value > 0 && newValue && newValue !== oldValue) {
-    timeoutID.value = setTimeout(() => {
-      remainingTimerSeconds.value--
-    }, 1000)
-  }
-})
+// watch(timerEnabled, (newValue, oldValue) => {
+//   if (remainingTimerSeconds.value > 0 && newValue && newValue !== oldValue) {
+//     timeoutID.value = setTimeout(() => {
+//       remainingTimerSeconds.value--
+//     }, 1000)
+//   }
+// })
 watch(remainingTimerSeconds, (newValue) => {
-  if (newValue > 0 && timerEnabled.value === true) {
-    timeoutID.value = setTimeout(() => {
-      remainingTimerSeconds.value--
-    }, 1000)
-  }
+  // if (newValue > 0 && timerEnabled.value === true) {
+  //   timeoutID.value = setTimeout(() => {
+  //     remainingTimerSeconds.value--
+  //   }, 1000)
+  // }
   if (newValue === 0 && timerEnabled.value === true) {
     timerEnabled.value = false
     const focusSeconds = props.timerMinutes * 60 - remainingTimerSeconds.value

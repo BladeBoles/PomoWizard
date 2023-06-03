@@ -1,6 +1,7 @@
 const runningIntervals = {}
 
 self.onmessage = function (e) {
+  console.log('🚀 ~ file: timer-worker.js:4 ~ e:', e)
   switch (e.data.command) {
     case 'interval:start': {
       const newInterval = setInterval(function () {
