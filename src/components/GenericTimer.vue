@@ -23,7 +23,7 @@ const props = defineProps({
 
 const emit = defineEmits(['finished', 'started', 'stopped'])
 
-const timerWorker = new Worker('src/workers/simple-timer-worker.js')
+const timerWorker = new Worker('src/simple-timer-worker.js')
 
 const startTimer = async () => {
   if (remainingTimerSeconds.value > 0) {
