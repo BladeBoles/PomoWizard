@@ -23,82 +23,25 @@ const props = defineProps({
 
 const emit = defineEmits(['finished', 'started', 'stopped'])
 
-const timerWorker = new Worker('../workers/timer-worker.js')
-
-interface TimerObject {
-  nextId: number
-  callbacks: {
-    [key: number]: { fn: any; context: any }
-  }
-  setInterval: (cb: any, interval: any, context?: any) => {}
-  onMessage: (e: any) => void
-  clearInterval: (e: any) => void
-}
-
-const timerObject: TimerObject = {
-  nextId: 0,
-  callbacks: {},
-
-  setInterval: function (cb, interval, context) {
-    console.log(
-      '🚀 ~ file: GenericTimer.vue:76 ~ timerObject: TimerObject.cb, interval,:',
-      cb,
-      interval
-    )
-    this.nextId++
-    const currentId = this.nextId
-    this.callbacks[currentId] = { fn: cb, context }
-
-    timerWorker.postMessage({
-      command: 'interval:start',
-      interval,
-      id: currentId
-    })
-
-    // TODO: why do we need to return this?
-    return currentId
-  },
-
-  onMessage: function (e) {
-    switch (e.data.message) {
-      case 'interval:tick': {
-        let callback = this.callbacks[e.data.id]
-        // TODO: BB wtf does this mean?
-        if (callback && callback.fn) {
-          callback.fn.apply(callback.context)
-        }
-        break
-      }
-    }
-  },
-  clearInterval: function (id) {
-    timerWorker.postMessage({
-      command: 'interval:clear',
-      id
-    })
-  }
-}
-
-// Lets the handler function utilize the scope "this" has inside the object
-timerWorker.onmessage = timerObject.onMessage.bind(timerObject)
-
-console.log('🚀 ~ file: GenericTimer.vue:27 ~ timerWorker:', timerWorker)
+const timerWorker = new Worker('src/workers/simple-timer-worker.js')
 
 const startTimer = async () => {
-  console.log('starting timer!', remainingTimerSeconds.value)
   if (remainingTimerSeconds.value > 0) {
     timerEnabled.value = true
 
-    const subtractSecondAndRestart = () => {
-      console.log('subtract and restart!')
-      remainingTimerSeconds.value--
-      if (remainingTimerSeconds.value > 0) {
-        startTimer()
-      }
-    }
-    timerObject.setInterval(subtractSecondAndRestart, 1000)
+    timerWorker.postMessage({ message: 'start timer!!!' })
   }
-  emit('started')
+  if (remainingTimerSeconds.value === props.timerMinutes * 60) emit('started')
+}
+timerWorker.onmessage = function () {
+  remainingTimerSeconds.value--
+  if (remainingTimerSeconds.value > 0 && timerEnabled.value) {
+    startTimer()
+  } else if (remainingTimerSeconds.value <= 0 && timerEnabled.value === true) {
+    timerEnabled.value = false
+    const focusSeconds = props.timerMinutes * 60 - remainingTimerSeconds.value
+    emit('finished', { focusSeconds })
+  }
 }
 
 const pauseTimer = () => {
@@ -124,38 +67,11 @@ const finishTimer = () => {
   emit('finished', { focusSeconds })
 }
 
-// watch(timerEnabled, (newValue, oldValue) => {
-//   if (remainingTimerSeconds.value > 0 && newValue && newValue !== oldValue) {
-//     timeoutID.value = setTimeout(() => {
-//       remainingTimerSeconds.value--
-//     }, 1000)
-//   }
-// })
-watch(remainingTimerSeconds, (newValue) => {
-  // if (newValue > 0 && timerEnabled.value === true) {
-  //   timeoutID.value = setTimeout(() => {
-  //     remainingTimerSeconds.value--
-  //   }, 1000)
-  // }
-  if (newValue === 0 && timerEnabled.value === true) {
-    timerEnabled.value = false
-    const focusSeconds = props.timerMinutes * 60 - remainingTimerSeconds.value
-    emit('finished', { focusSeconds })
-  }
-})
-
 watch(
   () => props.timerType,
   () => {
-    clearTimeout(timeoutID.value)
     remainingTimerSeconds.value = props.timerMinutes * 60
     timerEnabled.value = props.autoStartTimer
-  }
-)
-watch(
-  () => props.timerMinutes,
-  () => {
-    remainingTimerSeconds.value = props.timerMinutes * 60
   }
 )
 const displayMinutes = computed(() => {

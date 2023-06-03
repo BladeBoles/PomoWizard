@@ -92,7 +92,6 @@ const handleTimerStarted = () => {
 
 <template>
   <h1>PomoWizard</h1>
-  <p>Timer minutes: {{ timerMinutes }}</p>
   <p>Finished pomodoros: {{ finishedPomos }}</p>
   <p>Pomos since last long break: {{ pomosSinceLastLongBreak }}</p>
   <p>
