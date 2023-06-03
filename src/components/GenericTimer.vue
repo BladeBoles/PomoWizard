@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+
 const timerEnabled = ref(false)
 const remainingTimerSeconds = ref(1500)
 const timeoutID = ref()
@@ -22,9 +23,25 @@ const props = defineProps({
 
 const emit = defineEmits(['finished', 'started', 'stopped'])
 
-const startTimer = () => {
-  timerEnabled.value = true
-  emit('started')
+const timerWorker = new Worker('src/workers/simple-timer-worker.js')
+
+const startTimer = async () => {
+  if (remainingTimerSeconds.value > 0) {
+    timerEnabled.value = true
+
+    timerWorker.postMessage({ message: 'start timer!!!' })
+  }
+  if (remainingTimerSeconds.value === props.timerMinutes * 60) emit('started')
+}
+timerWorker.onmessage = function () {
+  remainingTimerSeconds.value--
+  if (remainingTimerSeconds.value > 0 && timerEnabled.value) {
+    startTimer()
+  } else if (remainingTimerSeconds.value <= 0 && timerEnabled.value === true) {
+    timerEnabled.value = false
+    const focusSeconds = props.timerMinutes * 60 - remainingTimerSeconds.value
+    emit('finished', { focusSeconds })
+  }
 }
 
 const pauseTimer = () => {
@@ -50,38 +67,11 @@ const finishTimer = () => {
   emit('finished', { focusSeconds })
 }
 
-watch(timerEnabled, (newValue, oldValue) => {
-  if (remainingTimerSeconds.value > 0 && newValue && newValue !== oldValue) {
-    timeoutID.value = setTimeout(() => {
-      remainingTimerSeconds.value--
-    }, 1000)
-  }
-})
-watch(remainingTimerSeconds, (newValue) => {
-  if (newValue > 0 && timerEnabled.value === true) {
-    timeoutID.value = setTimeout(() => {
-      remainingTimerSeconds.value--
-    }, 1000)
-  }
-  if (newValue === 0 && timerEnabled.value === true) {
-    timerEnabled.value = false
-    const focusSeconds = props.timerMinutes * 60 - remainingTimerSeconds.value
-    emit('finished', { focusSeconds })
-  }
-})
-
 watch(
   () => props.timerType,
   () => {
-    clearTimeout(timeoutID.value)
     remainingTimerSeconds.value = props.timerMinutes * 60
     timerEnabled.value = props.autoStartTimer
-  }
-)
-watch(
-  () => props.timerMinutes,
-  () => {
-    remainingTimerSeconds.value = props.timerMinutes * 60
   }
 )
 const displayMinutes = computed(() => {
