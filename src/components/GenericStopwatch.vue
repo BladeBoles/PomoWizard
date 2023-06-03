@@ -5,7 +5,7 @@ const currentStopwatchCount = ref(0)
 
 const emit = defineEmits(['finished', 'started', 'stopped'])
 
-const stopwatchWorker = new Worker('src/simple-timer-worker.js')
+const stopwatchWorker = new Worker('/src/simple-timer-worker.js')
 
 const startWatch = () => {
   stopwatchRunning.value = true
