@@ -3,7 +3,6 @@ import { ref, computed, watch } from 'vue'
 
 const timerEnabled = ref(false)
 const remainingTimerSeconds = ref(1500)
-const timeoutID = ref()
 
 const props = defineProps({
   timerMinutes: {
@@ -69,6 +68,13 @@ const finishTimer = () => {
 
 watch(
   () => props.timerType,
+  () => {
+    remainingTimerSeconds.value = props.timerMinutes * 60
+    timerEnabled.value = props.autoStartTimer
+  }
+)
+watch(
+  () => props.timerMinutes,
   () => {
     remainingTimerSeconds.value = props.timerMinutes * 60
     timerEnabled.value = props.autoStartTimer
