@@ -17,6 +17,7 @@ const longBreakTimerMinutes = ref(15)
 const timerRunning = ref(false)
 const autoStartTimer = ref(false)
 const playTimerSounds = ref(false)
+const timerOrWatch = ref('Timer')
 
 const showSettings = ref(false)
 
@@ -106,16 +107,6 @@ const updateSettings = (newSettings: any) => {
 
 <template>
   <h1>PomoWizard</h1>
-  <p>Finished pomodoros: {{ finishedPomos }}</p>
-  <p>Pomos since last long break: {{ pomosSinceLastLongBreak }}</p>
-  <p>
-    Total focus sessions (Stopwatch):
-    {{ totalFocusSessions }}
-  </p>
-  <p>
-    Total focus minutes (Pomos and Stopwatch):
-    {{ totalFocusMinutes.toFixed(2) }}
-  </p>
   <SettingsModal
     :timer-running="timerRunning"
     :play-timer-sounds="playTimerSounds"
@@ -127,6 +118,25 @@ const updateSettings = (newSettings: any) => {
     v-if="showSettings"
   />
   <button v-else @click="() => (showSettings = true)">Settings</button>
+  <fieldset>
+    <legend>Timer or Watch</legend>
+    <input
+      type="radio"
+      id="pomodoro-timer"
+      name="timer-or-watch"
+      value="Timer"
+      v-model="timerOrWatch"
+    />
+    <label for="timer1">Pomodoro</label>
+    <input
+      type="radio"
+      id="stopwatch"
+      name="timer-or-watch"
+      value="StopWatch"
+      v-model="timerOrWatch"
+    />
+    <label for="timer2">Stopwatch</label>
+  </fieldset>
   <fieldset>
     <legend>Timer Type</legend>
     <input
@@ -162,7 +172,18 @@ const updateSettings = (newSettings: any) => {
     @finished="handleTimerFinished"
     @stopped="handleTimerStopped"
     @started="handleTimerStarted"
+    v-if="timerOrWatch === 'Timer'"
   />
-  <GenericStopwatch @finished="handleStopWatchFinished" />
+  <GenericStopwatch v-else @finished="handleStopWatchFinished" />
+  <p>Finished pomodoros: {{ finishedPomos }}</p>
+  <p>Pomos since last long break: {{ pomosSinceLastLongBreak }}</p>
+  <p>
+    Total focus sessions (Stopwatch):
+    {{ totalFocusSessions }}
+  </p>
+  <p>
+    Total focus minutes (Pomos and Stopwatch):
+    {{ totalFocusMinutes.toFixed(2) }}
+  </p>
 </template>
 <style scoped></style>

@@ -52,12 +52,25 @@ const displaySeconds = computed(() => {
   <main>
     <div>
       <h2>Stopwatch</h2>
-      {{ displayMinutes }} : {{ displaySeconds }}
-      <button @click="startWatch">Start Watch</button>
-      <button @click="pauseWatch">Pause Watch</button>
-      <button :disabled="currentStopwatchCount < 3" @click="finishWatch">
-        Finish Session
-      </button>
+      <span class="generic-stopwatch__display"
+        >{{ displayMinutes }} : {{ displaySeconds }}</span
+      >
+      <div class="generic-stopwatch__buttons">
+        <button @click="startWatch">Start Watch</button>
+        <button @click="pauseWatch">Pause Watch</button>
+        <button :disabled="currentStopwatchCount < 3" @click="finishWatch">
+          Finish Session
+        </button>
+      </div>
     </div>
   </main>
 </template>
+<style scoped>
+.generic-stopwatch__display {
+  font-size: 48px;
+}
+.generic-stopwatch__buttons {
+  display: flex;
+  width: 200px;
+}
+</style>
