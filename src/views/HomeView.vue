@@ -1,19 +1,25 @@
 <script setup lang="ts">
 import GenericTimer from '@/components/GenericTimer.vue'
 import GenericStopwatch from '@/components/GenericStopwatch.vue'
+import SettingsModal from '@/modals/SettingsModal.vue'
 import { ref, computed } from 'vue'
 
-const timerRunning = ref(false)
-const autoStartTimer = ref(false)
 const timerType = ref('Pomodoro')
 const finishedPomos = ref(0)
 const pomosSinceLastLongBreak = ref(0)
+
+const totalFocusMinutes = ref(0)
+const totalFocusSessions = ref(0)
+
 const pomodoroTimerMinutes = ref(25)
 const shortBreakTimerMinutes = ref(5)
 const longBreakTimerMinutes = ref(15)
-const totalFocusMinutes = ref(0)
-const totalFocusSessions = ref(0)
+const timerRunning = ref(false)
+const autoStartTimer = ref(false)
 const playTimerSounds = ref(false)
+const timerOrWatch = ref('Timer')
+
+const showSettings = ref(false)
 
 const timerMinutes = computed(() => {
   let minutes = 0
@@ -88,85 +94,48 @@ const handleTimerStarted = () => {
     startedAudio.play()
   }
 }
+
+const updateSettings = (newSettings: any) => {
+  pomodoroTimerMinutes.value = newSettings.pomodoroTimerMinutes
+  shortBreakTimerMinutes.value = newSettings.shortBreakTimerMinutes
+  longBreakTimerMinutes.value = newSettings.longBreakTimerMinutes
+  playTimerSounds.value = newSettings.playTimerSounds
+  autoStartTimer.value = newSettings.autoStartTimer
+  showSettings.value = false
+}
 </script>
 
 <template>
   <h1>PomoWizard</h1>
-  <p>Finished pomodoros: {{ finishedPomos }}</p>
-  <p>Pomos since last long break: {{ pomosSinceLastLongBreak }}</p>
-  <p>
-    Total focus sessions (Stopwatch):
-    {{ totalFocusSessions }}
-  </p>
-  <p>
-    Total focus minutes (Pomos and Stopwatch):
-    {{ totalFocusMinutes.toFixed(2) }}
-  </p>
-
+  <SettingsModal
+    :timer-running="timerRunning"
+    :play-timer-sounds="playTimerSounds"
+    :auto-start-timer="autoStartTimer"
+    :short-break-timer-minutes="shortBreakTimerMinutes"
+    :long-break-timer-minutes="longBreakTimerMinutes"
+    :pomodoro-timer-minutes="pomodoroTimerMinutes"
+    @update="(settings) => updateSettings(settings)"
+    v-if="showSettings"
+  />
+  <button v-else @click="() => (showSettings = true)">Settings</button>
   <fieldset>
-    <legend>Timer Settings</legend>
-    <ul class="home__timer-settings">
-      <li>
-        <label for="pomo-timer-length">Pomodoro Length</label>
-        <input
-          class="home__timer-length-input"
-          :disabled="timerRunning"
-          id="pomo-timer-length"
-          type="number"
-          v-model="pomodoroTimerMinutes"
-        />
-        <span>minutes</span>
-      </li>
-      <li>
-        <label for="short-timer-length">Short Break Length</label>
-        <input
-          class="home__timer-length-input"
-          :disabled="timerRunning"
-          id="short-timer-length"
-          type="number"
-          v-model="shortBreakTimerMinutes"
-        />
-        <span>minutes</span>
-      </li>
-      <li>
-        <label for="long-timer-length">Long Break Length</label>
-        <input
-          class="home__timer-length-input"
-          :disabled="timerRunning"
-          id="long-timer-length"
-          type="number"
-          v-model="longBreakTimerMinutes"
-        />
-        <span>minutes</span>
-      </li>
-      <li>
-        <input
-          type="checkbox"
-          v-model="autoStartTimer"
-          name="auto-start"
-          id="auto-start"
-        />
-        <label for="auto-start"
-          >Automatically start timer when switching types</label
-        >
-      </li>
-      <li>
-        <h4>Timer sounds:</h4>
-        <div>
-          <input id="on" :value="true" type="radio" v-model="playTimerSounds" />
-          <label for="on">On</label>
-        </div>
-        <div>
-          <input
-            id="off"
-            :value="false"
-            type="radio"
-            v-model="playTimerSounds"
-          />
-          <label for="off">Off</label>
-        </div>
-      </li>
-    </ul>
+    <legend>Timer or Watch</legend>
+    <input
+      type="radio"
+      id="pomodoro-timer"
+      name="timer-or-watch"
+      value="Timer"
+      v-model="timerOrWatch"
+    />
+    <label for="timer1">Pomodoro</label>
+    <input
+      type="radio"
+      id="stopwatch"
+      name="timer-or-watch"
+      value="StopWatch"
+      v-model="timerOrWatch"
+    />
+    <label for="timer2">Stopwatch</label>
   </fieldset>
   <fieldset>
     <legend>Timer Type</legend>
@@ -203,18 +172,18 @@ const handleTimerStarted = () => {
     @finished="handleTimerFinished"
     @stopped="handleTimerStopped"
     @started="handleTimerStarted"
+    v-if="timerOrWatch === 'Timer'"
   />
-  <GenericStopwatch @finished="handleStopWatchFinished" />
+  <GenericStopwatch v-else @finished="handleStopWatchFinished" />
+  <p>Finished pomodoros: {{ finishedPomos }}</p>
+  <p>Pomos since last long break: {{ pomosSinceLastLongBreak }}</p>
+  <p>
+    Total focus sessions (Stopwatch):
+    {{ totalFocusSessions }}
+  </p>
+  <p>
+    Total focus minutes (Pomos and Stopwatch):
+    {{ totalFocusMinutes.toFixed(2) }}
+  </p>
 </template>
-<style scoped>
-.home__timer-settings {
-  display: flex;
-  flex-direction: column;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-.home__timer-length-input {
-  width: 100px;
-}
-</style>
+<style scoped></style>

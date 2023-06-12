@@ -3,7 +3,6 @@ import { ref, computed, watch } from 'vue'
 
 const timerEnabled = ref(false)
 const remainingTimerSeconds = ref(1500)
-const timeoutID = ref()
 
 const props = defineProps({
   timerMinutes: {
@@ -74,6 +73,13 @@ watch(
     timerEnabled.value = props.autoStartTimer
   }
 )
+watch(
+  () => props.timerMinutes,
+  () => {
+    remainingTimerSeconds.value = props.timerMinutes * 60
+    timerEnabled.value = props.autoStartTimer
+  }
+)
 const displayMinutes = computed(() => {
   const minutes = Math.floor(remainingTimerSeconds.value / 60)
   const minutesFormatted =
@@ -96,11 +102,24 @@ const displaySeconds = computed(() => {
   <main>
     <div>
       <h2>{{ timerType }} Timer</h2>
-      {{ displayMinutes }} : {{ displaySeconds }}
-      <button @click="startTimer">Start Timer</button>
-      <button @click="pauseTimer">Pause Timer</button>
-      <button @click="stopTimer">Stop Timer</button>
-      <button @click="finishTimer">Finish Timer Early</button>
+      <span class="generic-timer__display"
+        >{{ displayMinutes }} : {{ displaySeconds }}
+      </span>
+      <div class="generic-timer__buttons">
+        <button @click="startTimer">Start Timer</button>
+        <button @click="pauseTimer">Pause Timer</button>
+        <button @click="stopTimer">Stop Timer</button>
+        <button @click="finishTimer">Finish Timer Early</button>
+      </div>
     </div>
   </main>
 </template>
+<style scoped>
+.generic-timer__display {
+  font-size: 48px;
+}
+.generic-timer__buttons {
+  display: flex;
+  width: 200px;
+}
+</style>
