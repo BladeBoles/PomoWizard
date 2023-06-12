@@ -18,6 +18,8 @@ const timerRunning = ref(false)
 const autoStartTimer = ref(false)
 const playTimerSounds = ref(false)
 
+const showSettings = ref(false)
+
 const timerMinutes = computed(() => {
   let minutes = 0
   switch (timerType.value) {
@@ -93,20 +95,12 @@ const handleTimerStarted = () => {
 }
 
 const updateSettings = (newSettings: any) => {
-  console.log(
-    '🚀 ~ file: HomeView.vue:96 ~ updateSettings ~ newSettings:',
-    newSettings
-  )
   pomodoroTimerMinutes.value = newSettings.pomodoroTimerMinutes
-  console.log(
-    '🚀 ~ file: HomeView.vue:101 ~ updateSettings ~ pomodoroTimerMinutes.value:',
-    pomodoroTimerMinutes.value,
-    timerMinutes.value
-  )
   shortBreakTimerMinutes.value = newSettings.shortBreakTimerMinutes
   longBreakTimerMinutes.value = newSettings.longBreakTimerMinutes
   playTimerSounds.value = newSettings.playTimerSounds
   autoStartTimer.value = newSettings.autoStartTimer
+  showSettings.value = false
 }
 </script>
 
@@ -130,7 +124,9 @@ const updateSettings = (newSettings: any) => {
     :long-break-timer-minutes="longBreakTimerMinutes"
     :pomodoro-timer-minutes="pomodoroTimerMinutes"
     @update="(settings) => updateSettings(settings)"
+    v-if="showSettings"
   />
+  <button v-else @click="() => (showSettings = true)">Settings</button>
   <fieldset>
     <legend>Timer Type</legend>
     <input
