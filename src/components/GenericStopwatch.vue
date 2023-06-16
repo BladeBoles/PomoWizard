@@ -55,13 +55,22 @@ const displaySeconds = computed(() => {
         >{{ displayMinutes }} : {{ displaySeconds }}</span
       >
       <div class="generic-stopwatch__buttons">
-        <button class="generic-stopwatch__play-button" @click="startWatch">
+        <button
+          aria-label="play"
+          class="generic-stopwatch__play-button"
+          @click="startWatch"
+        >
           <i class="fa-solid fa-play" />
         </button>
-        <button class="generic-stopwatch__pause-button" @click="pauseWatch">
+        <button
+          aria-label="pause"
+          class="generic-stopwatch__pause-button"
+          @click="pauseWatch"
+        >
           <i class="fa-solid fa-pause" />
         </button>
         <button
+          aria-label="finish"
           class="generic-stopwatch__finish-button"
           :disabled="currentStopwatchCount < 3"
           @click="finishWatch"

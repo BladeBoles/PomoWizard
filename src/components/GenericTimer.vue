@@ -105,16 +105,32 @@ const displaySeconds = computed(() => {
         >{{ displayMinutes }} : {{ displaySeconds }}
       </span>
       <div class="generic-timer__buttons">
-        <button @click="startTimer" class="generic-timer__play-button">
+        <button
+          aria-label="play"
+          @click="startTimer"
+          class="generic-timer__play-button"
+        >
           <i class="fa-solid fa-play" />
         </button>
-        <button class="generic-timer__pause-button" @click="pauseTimer">
+        <button
+          aria-label="pause"
+          class="generic-timer__pause-button"
+          @click="pauseTimer"
+        >
           <i class="fa-solid fa-pause" />
         </button>
-        <button @click="stopTimer" class="generic-timer__stop-button">
+        <button
+          aria-label="stop"
+          @click="stopTimer"
+          class="generic-timer__stop-button"
+        >
           <i class="fa-solid fa-stop" />
         </button>
-        <button @click="finishTimer" class="generic-timer__finish-button">
+        <button
+          aria-label="finish"
+          @click="finishTimer"
+          class="generic-timer__finish-button"
+        >
           <i class="fa-solid fa-forward" />
         </button>
       </div>
