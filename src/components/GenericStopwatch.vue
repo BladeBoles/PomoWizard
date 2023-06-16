@@ -56,10 +56,10 @@ const displaySeconds = computed(() => {
         >{{ displayMinutes }} : {{ displaySeconds }}</span
       >
       <div class="generic-stopwatch__buttons">
-        <button @click="startWatch">Start Watch</button>
-        <button @click="pauseWatch">Pause Watch</button>
+        <button @click="startWatch"><i class="fa-solid fa-play" /></button>
+        <button @click="pauseWatch"><i class="fa-solid fa-pause" /></button>
         <button :disabled="currentStopwatchCount < 3" @click="finishWatch">
-          Finish Session
+          <i class="fa-solid fa-square-check" />
         </button>
       </div>
     </div>

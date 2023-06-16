@@ -106,10 +106,12 @@ const displaySeconds = computed(() => {
         >{{ displayMinutes }} : {{ displaySeconds }}
       </span>
       <div class="generic-timer__buttons">
-        <button @click="startTimer">Start Timer</button>
-        <button @click="pauseTimer">Pause Timer</button>
-        <button @click="stopTimer">Stop Timer</button>
-        <button @click="finishTimer">Finish Timer Early</button>
+        <button @click="startTimer"><i class="fa-solid fa-play" /></button>
+        <button @click="pauseTimer"><i class="fa-solid fa-pause" /></button>
+        <button @click="stopTimer"><i class="fa-solid fa-stop" /></button>
+        <button @click="finishTimer">
+          <i class="fa-solid fa-square-check" />
+        </button>
       </div>
     </div>
   </main>
