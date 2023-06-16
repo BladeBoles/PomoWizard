@@ -101,25 +101,53 @@ const displaySeconds = computed(() => {
 <template>
   <main>
     <div>
-      <h2>{{ timerType }} Timer</h2>
       <span class="generic-timer__display"
         >{{ displayMinutes }} : {{ displaySeconds }}
       </span>
       <div class="generic-timer__buttons">
-        <button @click="startTimer">Start Timer</button>
-        <button @click="pauseTimer">Pause Timer</button>
-        <button @click="stopTimer">Stop Timer</button>
-        <button @click="finishTimer">Finish Timer Early</button>
+        <button @click="startTimer" class="generic-timer__play-button">
+          <i class="fa-solid fa-play" />
+        </button>
+        <button class="generic-timer__pause-button" @click="pauseTimer">
+          <i class="fa-solid fa-pause" />
+        </button>
+        <button @click="stopTimer" class="generic-timer__stop-button">
+          <i class="fa-solid fa-stop" />
+        </button>
+        <button @click="finishTimer" class="generic-timer__finish-button">
+          <i class="fa-solid fa-forward" />
+        </button>
       </div>
     </div>
   </main>
 </template>
 <style scoped>
 .generic-timer__display {
-  font-size: 48px;
+  font-size: 60px;
 }
 .generic-timer__buttons {
-  display: flex;
-  width: 200px;
+  margin-bottom: 20px;
+}
+.generic-timer__buttons button {
+  height: 32px;
+  width: 32px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.generic-timer__play-button {
+  color: white;
+  background-color: green;
+}
+.generic-timer__pause-button {
+  color: white;
+  background-color: goldenrod;
+}
+.generic-timer__stop-button {
+  color: white;
+  background-color: brown;
+}
+.generic-timer__finish-button {
+  color: white;
+  background-color: lightskyblue;
 }
 </style>

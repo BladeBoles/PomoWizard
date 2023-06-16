@@ -106,84 +106,95 @@ const updateSettings = (newSettings: any) => {
 </script>
 
 <template>
-  <h1>PomoWizard</h1>
-  <SettingsModal
-    :timer-running="timerRunning"
-    :play-timer-sounds="playTimerSounds"
-    :auto-start-timer="autoStartTimer"
-    :short-break-timer-minutes="shortBreakTimerMinutes"
-    :long-break-timer-minutes="longBreakTimerMinutes"
-    :pomodoro-timer-minutes="pomodoroTimerMinutes"
-    @update="(settings) => updateSettings(settings)"
-    v-if="showSettings"
-  />
-  <button v-else @click="() => (showSettings = true)">Settings</button>
-  <fieldset>
-    <legend>Timer or Watch</legend>
-    <input
-      type="radio"
-      id="pomodoro-timer"
-      name="timer-or-watch"
-      value="Timer"
-      v-model="timerOrWatch"
+  <div class="home-view">
+    <h1>PomoWizard</h1>
+    <SettingsModal
+      :timer-running="timerRunning"
+      :play-timer-sounds="playTimerSounds"
+      :auto-start-timer="autoStartTimer"
+      :short-break-timer-minutes="shortBreakTimerMinutes"
+      :long-break-timer-minutes="longBreakTimerMinutes"
+      :pomodoro-timer-minutes="pomodoroTimerMinutes"
+      @update="(settings) => updateSettings(settings)"
+      v-if="showSettings"
     />
-    <label for="timer1">Pomodoro</label>
-    <input
-      type="radio"
-      id="stopwatch"
-      name="timer-or-watch"
-      value="StopWatch"
-      v-model="timerOrWatch"
+    <button v-else @click="() => (showSettings = true)">Settings</button>
+    <fieldset>
+      <legend>Timer or Watch</legend>
+      <input
+        type="radio"
+        id="pomodoro-timer"
+        name="timer-or-watch"
+        value="Timer"
+        v-model="timerOrWatch"
+      />
+      <label for="timer1">Pomodoro</label>
+      <input
+        type="radio"
+        id="stopwatch"
+        name="timer-or-watch"
+        value="StopWatch"
+        v-model="timerOrWatch"
+      />
+      <label for="timer2">Stopwatch</label>
+    </fieldset>
+    <fieldset>
+      <legend>Timer Type</legend>
+      <input
+        type="radio"
+        id="timer1"
+        name="timer-type"
+        value="Pomodoro"
+        v-model="timerType"
+      />
+      <label for="timer1">Pomodoro</label>
+      <input
+        type="radio"
+        id="timer2"
+        name="timer-type"
+        value="Short Break"
+        v-model="timerType"
+      />
+      <label for="timer2">Short Break</label>
+      <input
+        type="radio"
+        id="timer3"
+        name="timer-type"
+        value="Long Break"
+        v-model="timerType"
+      />
+      <label for="timer3">Long Break</label>
+    </fieldset>
+    <GenericTimer
+      :timer-minutes="timerMinutes"
+      :timer-type="timerType"
+      :auto-start-timer="autoStartTimer"
+      :play-timer-sounds="playTimerSounds"
+      @finished="handleTimerFinished"
+      @stopped="handleTimerStopped"
+      @started="handleTimerStarted"
+      v-if="timerOrWatch === 'Timer'"
     />
-    <label for="timer2">Stopwatch</label>
-  </fieldset>
-  <fieldset>
-    <legend>Timer Type</legend>
-    <input
-      type="radio"
-      id="timer1"
-      name="timer-type"
-      value="Pomodoro"
-      v-model="timerType"
-    />
-    <label for="timer1">Pomodoro</label>
-    <input
-      type="radio"
-      id="timer2"
-      name="timer-type"
-      value="Short Break"
-      v-model="timerType"
-    />
-    <label for="timer2">Short Break</label>
-    <input
-      type="radio"
-      id="timer3"
-      name="timer-type"
-      value="Long Break"
-      v-model="timerType"
-    />
-    <label for="timer3">Long Break</label>
-  </fieldset>
-  <GenericTimer
-    :timer-minutes="timerMinutes"
-    :timer-type="timerType"
-    :auto-start-timer="autoStartTimer"
-    :play-timer-sounds="playTimerSounds"
-    @finished="handleTimerFinished"
-    @stopped="handleTimerStopped"
-    @started="handleTimerStarted"
-    v-if="timerOrWatch === 'Timer'"
-  />
-  <GenericStopwatch v-else @finished="handleStopWatchFinished" />
-  <p>Finished pomodoros: {{ finishedPomos }}</p>
-  <p>Pomos since last long break: {{ pomosSinceLastLongBreak }}</p>
-  <p>
-    Total focus sessions (Stopwatch):
-    {{ totalFocusSessions }}
-  </p>
-  <p>
-    Total focus minutes (Pomos and Stopwatch):
-    {{ totalFocusMinutes.toFixed(2) }}
-  </p>
+    <GenericStopwatch v-else @finished="handleStopWatchFinished" />
+    <p>Finished pomodoros: {{ finishedPomos }}</p>
+    <p>Pomos since last long break: {{ pomosSinceLastLongBreak }}</p>
+    <p>
+      Total focus sessions (Stopwatch):
+      {{ totalFocusSessions }}
+    </p>
+    <p>
+      Total focus minutes (Pomos and Stopwatch):
+      {{ totalFocusMinutes.toFixed(2) }}
+    </p>
+  </div>
 </template>
-<style scoped></style>
+<style scoped>
+p {
+  margin: 5px;
+}
+.home-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
