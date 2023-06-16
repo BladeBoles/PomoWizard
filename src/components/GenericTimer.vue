@@ -101,7 +101,6 @@ const displaySeconds = computed(() => {
 <template>
   <main>
     <div>
-      <h2>{{ timerType }} Timer</h2>
       <span class="generic-timer__display"
         >{{ displayMinutes }} : {{ displaySeconds }}
       </span>
@@ -124,7 +123,10 @@ const displaySeconds = computed(() => {
 </template>
 <style scoped>
 .generic-timer__display {
-  font-size: 48px;
+  font-size: 60px;
+}
+.generic-timer__buttons {
+  margin-bottom: 20px;
 }
 .generic-timer__buttons button {
   height: 32px;

@@ -51,7 +51,6 @@ const displaySeconds = computed(() => {
 <template>
   <main>
     <div>
-      <h2>Stopwatch</h2>
       <span class="generic-stopwatch__display"
         >{{ displayMinutes }} : {{ displaySeconds }}</span
       >
@@ -75,7 +74,11 @@ const displaySeconds = computed(() => {
 </template>
 <style scoped>
 .generic-stopwatch__display {
-  font-size: 48px;
+  font-size: 60px;
+}
+
+.generic-stopwatch__buttons {
+  margin-bottom: 20px;
 }
 .generic-stopwatch__buttons button {
   height: 32px;
