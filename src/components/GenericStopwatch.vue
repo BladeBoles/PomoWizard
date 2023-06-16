@@ -56,10 +56,18 @@ const displaySeconds = computed(() => {
         >{{ displayMinutes }} : {{ displaySeconds }}</span
       >
       <div class="generic-stopwatch__buttons">
-        <button @click="startWatch"><i class="fa-solid fa-play" /></button>
-        <button @click="pauseWatch"><i class="fa-solid fa-pause" /></button>
-        <button :disabled="currentStopwatchCount < 3" @click="finishWatch">
-          <i class="fa-solid fa-square-check" />
+        <button class="generic-stopwatch__play-button" @click="startWatch">
+          <i class="fa-solid fa-play" />
+        </button>
+        <button class="generic-stopwatch__pause-button" @click="pauseWatch">
+          <i class="fa-solid fa-pause" />
+        </button>
+        <button
+          class="generic-stopwatch__finish-button"
+          :disabled="currentStopwatchCount < 3"
+          @click="finishWatch"
+        >
+          <i class="fa-solid fa-forward" />
         </button>
       </div>
     </div>
@@ -69,8 +77,23 @@ const displaySeconds = computed(() => {
 .generic-stopwatch__display {
   font-size: 48px;
 }
-.generic-stopwatch__buttons {
-  display: flex;
-  width: 200px;
+.generic-stopwatch__buttons button {
+  height: 32px;
+  width: 32px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.generic-stopwatch__play-button {
+  color: white;
+  background-color: green;
+}
+.generic-stopwatch__pause-button {
+  color: white;
+  background-color: goldenrod;
+}
+.generic-stopwatch__finish-button {
+  color: white;
+  background-color: lightskyblue;
 }
 </style>
