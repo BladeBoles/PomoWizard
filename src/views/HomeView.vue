@@ -119,7 +119,7 @@ const updateSettings = (newSettings: any) => {
     />
     <button v-else @click="() => (showSettings = true)">Settings</button>
     <fieldset>
-      <legend>Timer Type</legend>
+      <legend class="home-view__timer-legend">Timer Type</legend>
       <input
         type="radio"
         id="timer1"
@@ -206,5 +206,12 @@ p {
 }
 .home-view__radio-input:checked + .home-view__radio-label {
   border: 3px solid green;
+}
+
+.home-view__timer-legend {
+  visibility: hidden;
+}
+fieldset {
+  border: none;
 }
 </style>
