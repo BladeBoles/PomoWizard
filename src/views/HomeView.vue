@@ -17,7 +17,6 @@ const longBreakTimerMinutes = ref(15)
 const timerRunning = ref(false)
 const autoStartTimer = ref(false)
 const playTimerSounds = ref(false)
-const timerOrWatch = ref('Timer')
 
 const showSettings = ref(false)
 
@@ -107,7 +106,16 @@ const updateSettings = (newSettings: any) => {
 
 <template>
   <div class="home-view">
-    <h1>PomoWizard</h1>
+    <div class="home-view__header">
+      <h1>PomoWizard</h1>
+      <button
+        class="home-view__settings-button"
+        v-if="!showSettings"
+        @click="() => (showSettings = true)"
+      >
+        <i class="fa-solid fa-cog"></i> Settings
+      </button>
+    </div>
     <SettingsModal
       :timer-running="timerRunning"
       :play-timer-sounds="playTimerSounds"
@@ -118,64 +126,62 @@ const updateSettings = (newSettings: any) => {
       @update="(settings) => updateSettings(settings)"
       v-if="showSettings"
     />
-    <button v-else @click="() => (showSettings = true)">Settings</button>
-    <fieldset>
-      <legend>Timer or Watch</legend>
-      <input
-        type="radio"
-        id="pomodoro-timer"
-        name="timer-or-watch"
-        value="Timer"
-        v-model="timerOrWatch"
+
+    <div class="home-view__timer-group">
+      <fieldset>
+        <legend class="home-view__timer-legend">Timer Type</legend>
+        <input
+          type="radio"
+          id="timer1"
+          name="timer-type"
+          value="Pomodoro"
+          v-model="timerType"
+          class="home-view__radio-input"
+        />
+        <label class="home-view__radio-label" for="timer1">Pomodoro</label>
+        <input
+          type="radio"
+          id="timer2"
+          name="timer-type"
+          value="Short Break"
+          v-model="timerType"
+          class="home-view__radio-input"
+        />
+        <label class="home-view__radio-label" for="timer2">Short Break</label>
+        <input
+          type="radio"
+          id="timer3"
+          name="timer-type"
+          value="Long Break"
+          v-model="timerType"
+          class="home-view__radio-input"
+        />
+        <label class="home-view__radio-label" for="timer3">Long Break</label>
+        <input
+          type="radio"
+          id="stopwatch"
+          name="timer-type"
+          value="Stopwatch"
+          v-model="timerType"
+          class="home-view__radio-input"
+        />
+        <label class="home-view__radio-label" for="stopwatch">Stopwatch</label>
+      </fieldset>
+      <GenericStopwatch
+        v-if="timerType === 'Stopwatch'"
+        @finished="handleStopWatchFinished"
       />
-      <label for="timer1">Pomodoro</label>
-      <input
-        type="radio"
-        id="stopwatch"
-        name="timer-or-watch"
-        value="StopWatch"
-        v-model="timerOrWatch"
+      <GenericTimer
+        :timer-minutes="timerMinutes"
+        :timer-type="timerType"
+        :auto-start-timer="autoStartTimer"
+        :play-timer-sounds="playTimerSounds"
+        @finished="handleTimerFinished"
+        @stopped="handleTimerStopped"
+        @started="handleTimerStarted"
+        v-else
       />
-      <label for="timer2">Stopwatch</label>
-    </fieldset>
-    <fieldset>
-      <legend>Timer Type</legend>
-      <input
-        type="radio"
-        id="timer1"
-        name="timer-type"
-        value="Pomodoro"
-        v-model="timerType"
-      />
-      <label for="timer1">Pomodoro</label>
-      <input
-        type="radio"
-        id="timer2"
-        name="timer-type"
-        value="Short Break"
-        v-model="timerType"
-      />
-      <label for="timer2">Short Break</label>
-      <input
-        type="radio"
-        id="timer3"
-        name="timer-type"
-        value="Long Break"
-        v-model="timerType"
-      />
-      <label for="timer3">Long Break</label>
-    </fieldset>
-    <GenericTimer
-      :timer-minutes="timerMinutes"
-      :timer-type="timerType"
-      :auto-start-timer="autoStartTimer"
-      :play-timer-sounds="playTimerSounds"
-      @finished="handleTimerFinished"
-      @stopped="handleTimerStopped"
-      @started="handleTimerStarted"
-      v-if="timerOrWatch === 'Timer'"
-    />
-    <GenericStopwatch v-else @finished="handleStopWatchFinished" />
+    </div>
     <p>Finished pomodoros: {{ finishedPomos }}</p>
     <p>Pomos since last long break: {{ pomosSinceLastLongBreak }}</p>
     <p>
@@ -189,6 +195,24 @@ const updateSettings = (newSettings: any) => {
   </div>
 </template>
 <style scoped>
+.home-view__header {
+  display: flex;
+  width: 50%;
+  justify-content: space-between;
+  border-bottom: 1px solid #4b4e5a;
+  margin-bottom: 30px;
+}
+.home-view__header h1 {
+  margin: 5px 0;
+}
+.home-view__settings-button {
+  background-color: #656874;
+  color: white;
+  padding: 10px;
+  align-self: center;
+  font-size: 16px;
+  border-radius: 6px;
+}
 p {
   margin: 5px;
 }
@@ -196,5 +220,34 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.home-view__radio-input {
+  appearance: none;
+  width: 0;
+  height: 0;
+}
+.home-view__radio-label {
+  border: 3px solid transparent;
+  padding: 5px;
+  cursor: pointer;
+}
+.home-view__radio-input:checked + .home-view__radio-label {
+  background-color: #4d505c;
+  border-radius: 6px;
+}
+
+.home-view__timer-legend {
+  visibility: hidden;
+}
+fieldset {
+  border: none;
+}
+
+.home-view__timer-group {
+  background-color: #656874;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
 }
 </style>

@@ -144,11 +144,12 @@ const saveChanges = () => {
 .settings-modal-main {
   text-align: center;
   background-color: white;
-  max-height: 500px;
-  max-width: 500px;
+  height: 500px;
+  width: 500px;
   margin-top: 10%;
   padding: 60px 0;
   border-radius: 20px;
+  color: black;
 }
 .home__timer-settings {
   display: flex;
