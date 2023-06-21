@@ -50,7 +50,7 @@ const displaySeconds = computed(() => {
 
 <template>
   <main>
-    <div>
+    <div class="generic-stopwatch__body">
       <span class="generic-stopwatch__display"
         >{{ displayMinutes }} : {{ displaySeconds }}</span
       >
@@ -83,17 +83,19 @@ const displaySeconds = computed(() => {
 </template>
 <style scoped>
 .generic-stopwatch__display {
-  font-size: 60px;
+  font-size: 120px;
 }
 
 .generic-stopwatch__buttons {
   margin-bottom: 20px;
+  margin-top: 15px;
 }
 .generic-stopwatch__buttons button {
-  height: 32px;
-  width: 32px;
-  margin-right: 10px;
+  height: 40px;
+  width: 40px;
+  margin-right: 15px;
   cursor: pointer;
+  border-radius: 6px;
 }
 
 .generic-stopwatch__play-button {
@@ -107,5 +109,10 @@ const displaySeconds = computed(() => {
 .generic-stopwatch__finish-button {
   color: white;
   background-color: lightskyblue;
+}
+.generic-stopwatch__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

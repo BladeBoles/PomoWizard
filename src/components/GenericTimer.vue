@@ -100,7 +100,7 @@ const displaySeconds = computed(() => {
 
 <template>
   <main>
-    <div>
+    <div class="generic-timer__body">
       <span class="generic-timer__display"
         >{{ displayMinutes }} : {{ displaySeconds }}
       </span>
@@ -139,16 +139,18 @@ const displaySeconds = computed(() => {
 </template>
 <style scoped>
 .generic-timer__display {
-  font-size: 60px;
+  font-size: 120px;
 }
 .generic-timer__buttons {
   margin-bottom: 20px;
+  margin-top: 15px;
 }
 .generic-timer__buttons button {
-  height: 32px;
-  width: 32px;
-  margin-right: 10px;
+  height: 40px;
+  width: 40px;
+  margin-right: 15px;
   cursor: pointer;
+  border-radius: 6px;
 }
 .generic-timer__play-button {
   color: white;
@@ -165,5 +167,10 @@ const displaySeconds = computed(() => {
 .generic-timer__finish-button {
   color: white;
   background-color: lightskyblue;
+}
+.generic-timer__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
