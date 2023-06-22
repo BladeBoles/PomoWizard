@@ -182,16 +182,24 @@ const updateSettings = (newSettings: any) => {
         v-else
       />
     </div>
-    <p>Finished pomodoros: {{ finishedPomos }}</p>
-    <p>Pomos since last long break: {{ pomosSinceLastLongBreak }}</p>
-    <p>
-      Total focus sessions (Stopwatch):
-      {{ totalFocusSessions }}
-    </p>
-    <p>
-      Total focus minutes (Pomos and Stopwatch):
-      {{ totalFocusMinutes.toFixed(2) }}
-    </p>
+    <div class="home-view__info-section">
+      <div>
+        <p>Total pomodoros:</p>
+        <span>{{ finishedPomos }}</span>
+      </div>
+      <div>
+        <p>Pomos since long break:</p>
+        <span>{{ pomosSinceLastLongBreak }}</span>
+      </div>
+      <div>
+        <p>Total stopwatch sessions:</p>
+        <span>{{ totalFocusSessions }}</span>
+      </div>
+      <div>
+        <p>Total focus minutes:</p>
+        <span>{{ totalFocusMinutes.toFixed(1) }}</span>
+      </div>
+    </div>
   </div>
 </template>
 <style scoped>
@@ -208,13 +216,13 @@ const updateSettings = (newSettings: any) => {
 .home-view__settings-button {
   background-color: #656874;
   color: white;
-  padding: 10px;
+  padding: 6px;
   align-self: center;
-  font-size: 16px;
+  font-size: 18px;
   border-radius: 6px;
 }
 p {
-  margin: 5px;
+  margin: 0px;
 }
 .home-view {
   display: flex;
@@ -231,6 +239,7 @@ p {
   border: 3px solid transparent;
   padding: 5px;
   cursor: pointer;
+  font-size: 20px;
 }
 .home-view__radio-input:checked + .home-view__radio-label {
   background-color: #4d505c;
@@ -249,5 +258,18 @@ fieldset {
   display: flex;
   flex-direction: column;
   border-radius: 6px;
+}
+
+.home-view__info-section {
+  margin-top: 20px;
+  font-size: 20px;
+  min-width: 250px;
+}
+
+.home-view__info-section div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
 }
 </style>
