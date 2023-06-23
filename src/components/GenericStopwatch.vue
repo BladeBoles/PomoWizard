@@ -84,6 +84,7 @@ const displaySeconds = computed(() => {
 <style scoped>
 .generic-stopwatch__display {
   font-size: 120px;
+  margin-top: -10px;
 }
 
 .generic-stopwatch__buttons {

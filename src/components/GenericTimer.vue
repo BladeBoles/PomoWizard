@@ -140,6 +140,7 @@ const displaySeconds = computed(() => {
 <style scoped>
 .generic-timer__display {
   font-size: 120px;
+  margin-top: -10px;
 }
 .generic-timer__buttons {
   margin-bottom: 20px;

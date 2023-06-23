@@ -113,7 +113,8 @@ const updateSettings = (newSettings: any) => {
         v-if="!showSettings"
         @click="() => (showSettings = true)"
       >
-        <i class="fa-solid fa-cog"></i> Settings
+        <i class="fa-solid fa-cog"></i>
+        <span class="home-view__settings-word">Settings</span>
       </button>
     </div>
     <SettingsModal
@@ -205,7 +206,7 @@ const updateSettings = (newSettings: any) => {
 <style scoped>
 .home-view__header {
   display: flex;
-  width: 50%;
+  width: 100%;
   justify-content: space-between;
   border-bottom: 1px solid #4b4e5a;
   margin-bottom: 30px;
@@ -221,6 +222,9 @@ const updateSettings = (newSettings: any) => {
   font-size: 18px;
   border-radius: 6px;
 }
+.home-view__settings-word {
+  display: none;
+}
 p {
   margin: 0px;
 }
@@ -234,6 +238,7 @@ p {
   appearance: none;
   width: 0;
   height: 0;
+  margin-bottom: 25px;
 }
 .home-view__radio-label {
   border: 3px solid transparent;
@@ -271,5 +276,14 @@ fieldset {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 5px;
+}
+
+@media (min-width: 600px) {
+  .home-view__header {
+    width: 50%;
+  }
+  .home-view__settings-word {
+    display: inline;
+  }
 }
 </style>
