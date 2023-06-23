@@ -98,9 +98,7 @@ const saveChanges = () => {
               name="auto-start"
               id="auto-start"
             />
-            <label for="auto-start"
-              >Automatically start timer when switching types</label
-            >
+            <label for="auto-start">Automatically start timers</label>
           </li>
           <li>
             <h4>Timer sounds:</h4>
@@ -152,8 +150,7 @@ const saveChanges = () => {
   align-items: center;
   text-align: center;
   background-color: white;
-  max-width: 500px;
-  margin-top: 10%;
+  max-width: 350px;
   padding: 40px 10px 10px 10px;
   border-radius: 20px;
   font-size: 18px;
@@ -164,13 +161,14 @@ const saveChanges = () => {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: 380px;
+  width: 300px;
   justify-content: space-between;
 }
 
 .settings-modal__timer-setting-item {
   display: flex;
   flex-direction: column;
+  margin-left: 5px;
 }
 
 .settings-modal__timer-setting-item label {
@@ -185,7 +183,7 @@ const saveChanges = () => {
   padding: 0;
 }
 .settings-modal__timer-length-input {
-  width: 90px;
+  width: 60px;
   font-size: 20px;
   color: rgb(85, 85, 85);
 }
@@ -197,6 +195,8 @@ const saveChanges = () => {
 fieldset {
   border: none;
   margin-bottom: 20px;
+  text-align: left;
+  align-self: flex-start;
 }
 
 input[type='number']::-webkit-inner-spin-button,
@@ -212,5 +212,10 @@ input[type='number']::-webkit-outer-spin-button {
   font-size: 18px;
   border-radius: 6px;
   align-self: flex-end;
+}
+
+h4 {
+  margin: 10px 0 5px 0;
+  padding-left: 2px;
 }
 </style>
