@@ -139,7 +139,7 @@ const displaySeconds = computed(() => {
 </template>
 <style scoped>
 .generic-timer__display {
-  font-size: 120px;
+  font-size: 80px;
   margin-top: -10px;
 }
 .generic-timer__buttons {
@@ -147,8 +147,8 @@ const displaySeconds = computed(() => {
   margin-top: 15px;
 }
 .generic-timer__buttons button {
-  height: 40px;
-  width: 40px;
+  height: 48px;
+  width: 48px;
   margin-right: 15px;
   cursor: pointer;
   border-radius: 6px;
@@ -173,5 +173,11 @@ const displaySeconds = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+@media (min-width: 600px) {
+  .generic-timer__display {
+    font-size: 120px;
+  }
 }
 </style>

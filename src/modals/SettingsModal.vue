@@ -150,7 +150,7 @@ const saveChanges = () => {
   align-items: center;
   text-align: center;
   background-color: white;
-  max-width: 350px;
+  max-width: 320px;
   padding: 40px 10px 10px 10px;
   border-radius: 20px;
   font-size: 18px;

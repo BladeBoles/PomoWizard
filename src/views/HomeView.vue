@@ -131,42 +131,52 @@ const updateSettings = (newSettings: any) => {
     <div class="home-view__timer-group">
       <fieldset>
         <legend class="home-view__timer-legend">Timer Type</legend>
-        <input
-          type="radio"
-          id="timer1"
-          name="timer-type"
-          value="Pomodoro"
-          v-model="timerType"
-          class="home-view__radio-input"
-        />
-        <label class="home-view__radio-label" for="timer1">Pomodoro</label>
-        <input
-          type="radio"
-          id="timer2"
-          name="timer-type"
-          value="Short Break"
-          v-model="timerType"
-          class="home-view__radio-input"
-        />
-        <label class="home-view__radio-label" for="timer2">Short Break</label>
-        <input
-          type="radio"
-          id="timer3"
-          name="timer-type"
-          value="Long Break"
-          v-model="timerType"
-          class="home-view__radio-input"
-        />
-        <label class="home-view__radio-label" for="timer3">Long Break</label>
-        <input
-          type="radio"
-          id="stopwatch"
-          name="timer-type"
-          value="Stopwatch"
-          v-model="timerType"
-          class="home-view__radio-input"
-        />
-        <label class="home-view__radio-label" for="stopwatch">Stopwatch</label>
+        <div>
+          <input
+            type="radio"
+            id="timer1"
+            name="timer-type"
+            value="Pomodoro"
+            v-model="timerType"
+            class="home-view__radio-input"
+          />
+          <label class="home-view__radio-label" for="timer1">Pomodoro</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="timer2"
+            name="timer-type"
+            value="Short Break"
+            v-model="timerType"
+            class="home-view__radio-input"
+          />
+          <label class="home-view__radio-label" for="timer2">Short Break</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="timer3"
+            name="timer-type"
+            value="Long Break"
+            v-model="timerType"
+            class="home-view__radio-input"
+          />
+          <label class="home-view__radio-label" for="timer3">Long Break</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="stopwatch"
+            name="timer-type"
+            value="Stopwatch"
+            v-model="timerType"
+            class="home-view__radio-input"
+          />
+          <label class="home-view__radio-label" for="stopwatch"
+            >Stopwatch</label
+          >
+        </div>
       </fieldset>
       <GenericStopwatch
         v-if="timerType === 'Stopwatch'"
@@ -244,7 +254,9 @@ p {
   border: 3px solid transparent;
   padding: 5px;
   cursor: pointer;
+
   font-size: 20px;
+  white-space: nowrap;
 }
 .home-view__radio-input:checked + .home-view__radio-label {
   background-color: #4d505c;
@@ -260,11 +272,14 @@ fieldset {
 
 .home-view__timer-group {
   background-color: #656874;
-  display: flex;
-  flex-direction: column;
   border-radius: 6px;
+  width: 98%;
 }
 
+.home-view__timer-group fieldset {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
 .home-view__info-section {
   margin-top: 20px;
   font-size: 20px;
@@ -280,10 +295,13 @@ fieldset {
 
 @media (min-width: 600px) {
   .home-view__header {
-    width: 50%;
+    width: 580px;
   }
   .home-view__settings-word {
     display: inline;
+  }
+  .home-view__timer-group {
+    width: 550px;
   }
 }
 </style>
