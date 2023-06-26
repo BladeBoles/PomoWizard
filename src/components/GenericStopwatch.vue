@@ -92,8 +92,8 @@ const displaySeconds = computed(() => {
   margin-top: 15px;
 }
 .generic-stopwatch__buttons button {
-  height: 40px;
-  width: 40px;
+  height: 48px;
+  width: 48px;
   margin-right: 15px;
   cursor: pointer;
   border-radius: 6px;
