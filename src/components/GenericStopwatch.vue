@@ -83,7 +83,7 @@ const displaySeconds = computed(() => {
 </template>
 <style scoped>
 .generic-stopwatch__display {
-  font-size: 120px;
+  font-size: 80px;
   margin-top: -10px;
 }
 
@@ -115,5 +115,11 @@ const displaySeconds = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+@media (min-width: 600px) {
+  .generic-stopwatch__display {
+    font-size: 120px;
+  }
 }
 </style>

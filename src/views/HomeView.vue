@@ -273,17 +273,13 @@ fieldset {
 .home-view__timer-group {
   background-color: #656874;
   border-radius: 6px;
+  width: 98%;
 }
 
 .home-view__timer-group fieldset {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 }
-
-.home-view__timer-group fieldset > * {
-  flex: 1 1 120px;
-}
-
 .home-view__info-section {
   margin-top: 20px;
   font-size: 20px;
@@ -299,10 +295,13 @@ fieldset {
 
 @media (min-width: 600px) {
   .home-view__header {
-    width: 50%;
+    width: 580px;
   }
   .home-view__settings-word {
     display: inline;
+  }
+  .home-view__timer-group {
+    width: 550px;
   }
 }
 </style>
