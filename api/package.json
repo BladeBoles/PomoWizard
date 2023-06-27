@@ -1,0 +1,15 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "PomoWizard API",
+  "main": "app.js",
+  "scripts": {
+    "test": "test",
+    "serve": "node app.js"
+  },
+  "author": "Blade Boles",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
