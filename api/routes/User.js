@@ -55,8 +55,14 @@ router.post('/login', async (req, res) => {
 })
 
 router.get('/profile', authMiddleware, (req, res) => {
-  const { userId, email } = req.userData
-  res.json({ userId, email })
+  const { email } = req.userData
+  const userProfile = User.findOne({
+    email
+  })
+  res.json({
+    email: userProfile.email,
+    userId: userProfile._id, focusMinutes: userProfile.focusMinutes, finishedPomodoros: userProfile.finishedPomodoros
+  })
 })
 
 router.get('/', async (req, res) => {
