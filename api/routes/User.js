@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
       userId: user._id, email: user.email
     }, 'secretkey', { expiresIn: '1h' })
 
-    res.status(200).json({ token })
+    res.status(200).json({ token, email })
   } catch (err) {
     console.error(err)
     res.status(500).json({ message: 'Internal server error' })

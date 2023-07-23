@@ -1,9 +1,11 @@
 {
+  "ignoreDeprecations": "5.0",
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": [
     "env.d.ts",
     "src/**/*",
     "src/**/*.vue",
+    "src/**/*.ts",
     "public/simple-timer-worker.js"
   ],
   "exclude": ["src/**/__tests__/*"],

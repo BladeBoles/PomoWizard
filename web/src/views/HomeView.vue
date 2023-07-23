@@ -3,6 +3,9 @@ import GenericTimer from '@/components/GenericTimer.vue'
 import GenericStopwatch from '@/components/GenericStopwatch.vue'
 import SettingsModal from '@/modals/SettingsModal.vue'
 import { ref, computed } from 'vue'
+import { useUserStore } from '@/stores/user'
+
+const store = useUserStore()
 
 const timerType = ref('Pomodoro')
 const finishedPomos = ref(0)
@@ -127,7 +130,10 @@ const updateSettings = (newSettings: any) => {
       @update="(settings) => updateSettings(settings)"
       v-if="showSettings"
     />
-
+    <h3>
+      Hello
+      {{ store.getUser.token ? store.getUser.email : 'no login' }}
+    </h3>
     <div class="home-view__timer-group">
       <fieldset>
         <legend class="home-view__timer-legend">Timer Type</legend>

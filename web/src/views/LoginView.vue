@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import AuthServices from '../services/AuthServices'
+import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
+
+const store = useUserStore()
+const router = useRouter()
 
 const loginChoice = ref('Log In')
 const signupPassword = ref('')
@@ -9,11 +14,19 @@ const loginPassword = ref('')
 const loginEmail = ref('')
 
 const signUp = async () => {
-  console.log('signing up...')
   await AuthServices.signUserUp(signupEmail.value, signupPassword.value)
 }
 const logIn = async () => {
-  await AuthServices.logUserIn(loginEmail.value, loginPassword.value)
+  const logInResponse = await AuthServices.logUserIn(
+    loginEmail.value,
+    loginPassword.value
+  )
+  store.saveUser(logInResponse.data)
+  if (store.getUser.token) {
+    router.push({
+      name: 'home'
+    })
+  }
 }
 </script>
 
