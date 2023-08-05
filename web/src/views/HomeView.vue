@@ -170,7 +170,7 @@ const updateSettings = (newSettings: any) => {
           />
           <label class="home-view__radio-label" for="timer3">Long Break</label>
         </div>
-        <div>
+        <div class="home-view__stopwatch-div">
           <input
             type="radio"
             id="stopwatch"
@@ -279,12 +279,20 @@ fieldset {
 .home-view__timer-group {
   background-color: #656874;
   border-radius: 6px;
-  width: 98%;
+  width: 90%;
 }
 
 .home-view__timer-group fieldset {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.home-view__timer-group fieldset div {
+  display: flex;
+}
+
+.home-view__stopwatch-div {
+  width: 100%;
 }
 .home-view__info-section {
   margin-top: 20px;
@@ -299,7 +307,7 @@ fieldset {
   margin-bottom: 5px;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 800px) {
   .home-view__header {
     width: 580px;
   }
@@ -307,7 +315,7 @@ fieldset {
     display: inline;
   }
   .home-view__timer-group {
-    width: 550px;
+    width: 650px;
   }
 }
 </style>
