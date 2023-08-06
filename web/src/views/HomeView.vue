@@ -307,12 +307,17 @@ fieldset {
   margin-bottom: 5px;
 }
 
+.home-view__info-section div span {
+  margin-left: 30px;
+}
+
 @media (min-width: 800px) {
   .home-view__header {
     width: 580px;
   }
   .home-view__settings-word {
     display: inline;
+    margin-left: 5px;
   }
   .home-view__timer-group {
     width: 650px;
