@@ -2,13 +2,18 @@
 import GenericTimer from '@/components/GenericTimer.vue'
 import GenericStopwatch from '@/components/GenericStopwatch.vue'
 import SettingsModal from '@/modals/SettingsModal.vue'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
+import AuthServices from '@/services/AuthServices'
 
 const store = useUserStore()
 
 const timerType = ref('Pomodoro')
 const finishedPomos = ref(0)
+const computedFinishedPomos = computed(
+  () => store.getUser.totalPomodoros || finishedPomos.value
+)
+
 const pomosSinceLastLongBreak = ref(0)
 
 const totalFocusMinutes = ref(0)
@@ -39,6 +44,18 @@ const timerMinutes = computed(() => {
   return minutes
 })
 
+onMounted(async () => {
+  if (store.getUser.token) {
+    const userProfile = await AuthServices.getUserProfile(store.getUser.token)
+    console.log(
+      '🚀 ~ file: HomeView.vue:50 ~ onMounted ~ userProfile:',
+      userProfile.data
+    )
+
+    finishedPomos.value = userProfile.data.totalPomodoros
+  }
+})
+
 const handleTimerFinished = (e: any) => {
   totalFocusMinutes.value += e.focusSeconds / 60
 
@@ -47,6 +64,14 @@ const handleTimerFinished = (e: any) => {
   } else {
     pomosSinceLastLongBreak.value++
     finishedPomos.value++
+    // TODO: clean up this update method
+    if (store.getUser.email && store.getUser.token) {
+      AuthServices.updateUserProfile(store.getUser.token, store.getUser.email, {
+        totalPomodoros: store.getUser.totalPomodoros
+          ? store.getUser.totalPomodoros + 1
+          : finishedPomos.value
+      })
+    }
 
     if (pomosSinceLastLongBreak.value > 3) {
       timerType.value = 'Long Break'

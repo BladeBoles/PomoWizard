@@ -4,6 +4,10 @@ import { defineStore } from 'pinia'
 interface UserType {
   token?: string
   email?: string
+  totalPomodoros?: number
+  pomodorosSinceLongBreak?: number
+  totalStopwatchSessions?: number
+  totalFocusMinutes?: number
 }
 export const useUserStore = defineStore('user', {
   state: () => ({ user: {} as UserType }),

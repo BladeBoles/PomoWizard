@@ -54,14 +54,39 @@ router.post('/login', async (req, res) => {
   }
 })
 
-router.get('/profile', authMiddleware, (req, res) => {
+router.post('/profile', authMiddleware, async (req, res) => {
+  console.log('🚀 ~ file: User.js:58 ~ router.post ~ req:', req.body)
   const { email } = req.userData
-  const userProfile = User.findOne({
+  const { totalFocusMinutes, totalPomodoros, pomodorosSinceLongBreak, totalStopwatchSessions } = req.body
+
+  const updateFields = {
+    ...(typeof totalFocusMinutes === 'number' && { totalFocusMinutes }),
+    ...(typeof totalPomodoros === 'number' && { totalPomodoros }),
+    ...(typeof pomodorosSinceLongBreak === 'number' && { pomodorosSinceLongBreak }),
+    ...(typeof totalStopwatchSessions === 'number' && { totalStopwatchSessions })
+  }
+  console.log('🚀 ~ file: User.js:63 ~ router.post ~ updateFields:', updateFields)
+  const userProfile = await User.updateOne({ email }, { ...updateFields })
+  const updatedUser = await User.findOne({
+    email
+  })
+  console.log('🚀 ~ file: User.js:73 ~ router.post ~ updatedUser:', updatedUser.totalPomodoros)
+
+  res.json({
+    totalFocusMinutes: updatedUser.totalFocusMinutes, totalPomodoros: updatedUser.totalPomodoros, pomodorosSinceLongBreak: updatedUser.pomodorosSinceLongBreak,
+    totalStopwatchSessions: updatedUser.totalStopwatchSessions
+  })
+})
+router.get('/profile', authMiddleware, async (req, res) => {
+  const { email } = req.userData
+  const userProfile = await User.findOne({
     email
   })
   res.json({
     email: userProfile.email,
-    userId: userProfile._id, focusMinutes: userProfile.focusMinutes, finishedPomodoros: userProfile.finishedPomodoros
+    userId: userProfile._id,
+    focusMinutes: userProfile.totalFocusMinutes, totalPomodoros: userProfile.totalPomodoros, pomodorosSinceLongBreak: userProfile.pomodorosSinceLongBreak,
+    totalStopwatchSessions: userProfile.totalStopwatchSessions
   })
 })
 

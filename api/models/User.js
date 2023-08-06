@@ -10,11 +10,19 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  focusMinutes: {
+  totalFocusMinutes: {
     type: Number,
     default: 0
   },
   totalPomodoros: {
+    type: Number,
+    default: 0
+  },
+  totalStopwatchSessions: {
+    type: Number,
+    default: 0
+  },
+  pomodorosSinceLongBreak: {
     type: Number,
     default: 0
   }
