@@ -2,10 +2,18 @@
 import GenericTimer from '@/components/GenericTimer.vue'
 import GenericStopwatch from '@/components/GenericStopwatch.vue'
 import SettingsModal from '@/modals/SettingsModal.vue'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useUserStore } from '@/stores/user'
+import AuthServices from '@/services/AuthServices'
+
+const store = useUserStore()
 
 const timerType = ref('Pomodoro')
 const finishedPomos = ref(0)
+const computedFinishedPomos = computed(
+  () => store.getUser.totalPomodoros || finishedPomos.value
+)
+
 const pomosSinceLastLongBreak = ref(0)
 
 const totalFocusMinutes = ref(0)
@@ -36,6 +44,18 @@ const timerMinutes = computed(() => {
   return minutes
 })
 
+onMounted(async () => {
+  if (store.getUser.token) {
+    const userProfile = await AuthServices.getUserProfile(store.getUser.token)
+    console.log(
+      '🚀 ~ file: HomeView.vue:50 ~ onMounted ~ userProfile:',
+      userProfile.data
+    )
+
+    finishedPomos.value = userProfile.data.totalPomodoros
+  }
+})
+
 const handleTimerFinished = (e: any) => {
   totalFocusMinutes.value += e.focusSeconds / 60
 
@@ -44,6 +64,14 @@ const handleTimerFinished = (e: any) => {
   } else {
     pomosSinceLastLongBreak.value++
     finishedPomos.value++
+    // TODO: clean up this update method
+    if (store.getUser.email && store.getUser.token) {
+      AuthServices.updateUserProfile(store.getUser.token, store.getUser.email, {
+        totalPomodoros: store.getUser.totalPomodoros
+          ? store.getUser.totalPomodoros + 1
+          : finishedPomos.value
+      })
+    }
 
     if (pomosSinceLastLongBreak.value > 3) {
       timerType.value = 'Long Break'
@@ -127,7 +155,10 @@ const updateSettings = (newSettings: any) => {
       @update="(settings) => updateSettings(settings)"
       v-if="showSettings"
     />
-
+    <h3>
+      Hello
+      {{ store.getUser.token ? store.getUser.email : 'no login' }}
+    </h3>
     <div class="home-view__timer-group">
       <fieldset>
         <legend class="home-view__timer-legend">Timer Type</legend>
@@ -164,7 +195,7 @@ const updateSettings = (newSettings: any) => {
           />
           <label class="home-view__radio-label" for="timer3">Long Break</label>
         </div>
-        <div>
+        <div class="home-view__stopwatch-div">
           <input
             type="radio"
             id="stopwatch"
@@ -273,12 +304,20 @@ fieldset {
 .home-view__timer-group {
   background-color: #656874;
   border-radius: 6px;
-  width: 98%;
+  width: 90%;
 }
 
 .home-view__timer-group fieldset {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.home-view__timer-group fieldset div {
+  display: flex;
+}
+
+.home-view__stopwatch-div {
+  width: 100%;
 }
 .home-view__info-section {
   margin-top: 20px;
@@ -293,15 +332,20 @@ fieldset {
   margin-bottom: 5px;
 }
 
-@media (min-width: 600px) {
+.home-view__info-section div span {
+  margin-left: 30px;
+}
+
+@media (min-width: 800px) {
   .home-view__header {
     width: 580px;
   }
   .home-view__settings-word {
     display: inline;
+    margin-left: 5px;
   }
   .home-view__timer-group {
-    width: 550px;
+    width: 650px;
   }
 }
 </style>
