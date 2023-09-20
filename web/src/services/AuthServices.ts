@@ -8,7 +8,7 @@ interface UpdateFields {
 }
 export default {
   signUserUp: async (email: string, password: string) => {
-    const response = await axios.post('http://localhost:3000/api/users/register', {
+    const response = await axios.post(`${import.meta.env.VITE_API_HOST}/api/users/register`, {
       email,
       password
     }).then((response) => {
@@ -19,7 +19,8 @@ export default {
     return response
   },
   logUserIn: async (email: string, password: string) => {
-    const response = await axios.post('http://localhost:3000/api/users/login', {
+    console.log('ENV VALUES???', import.meta.env)
+    const response = await axios.post(`${import.meta.env.VITE_API_HOST}/api/users/login`, {
       email,
       password
     }).then((response) => {
@@ -34,7 +35,7 @@ export default {
       totalPomodoros,
       pomodorosSinceLongBreak,
       totalStopwatchSessions } = updateFields
-    const response = await axios.post('http://localhost:3000/api/users/profile', {
+    const response = await axios.post(`${import.meta.env.VITE_API_HOST}/api/users/profile`, {
       email,
       totalFocusMinutes,
       totalPomodoros,
@@ -48,7 +49,7 @@ export default {
     return response
   },
   getUserProfile: async (token: string) => {
-    const response = await axios.get('http://localhost:3000/api/users/profile', { headers: { Authorization: `Bearer ${token}` } }).then((response) => {
+    const response = await axios.get(`${import.meta.env.VITE_API_HOST}/api/users/profile`, { headers: { Authorization: `Bearer ${token}` } }).then((response) => {
       return response
     }, (error) => {
       return error
