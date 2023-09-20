@@ -5,6 +5,7 @@ import SettingsModal from '@/modals/SettingsModal.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import AuthServices from '@/services/AuthServices'
+import { RouterLink } from 'vue-router'
 
 const store = useUserStore()
 
@@ -155,10 +156,15 @@ const updateSettings = (newSettings: any) => {
       @update="(settings) => updateSettings(settings)"
       v-if="showSettings"
     />
-    <h3>
-      Hello
-      {{ store.getUser.token ? store.getUser.email : 'no login' }}
+    <template v-if="store.getUser.token">
+    <h3 >
+      Hello {{ store.getUser.email}}
     </h3>
+  </template>
+  <template v-else>
+    <RouterLink to="/login">Login</RouterLink>
+  </template>
+    
     <div class="home-view__timer-group">
       <fieldset>
         <legend class="home-view__timer-legend">Timer Type</legend>
