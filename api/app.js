@@ -8,6 +8,8 @@ require('dotenv').config()
 
 const app = express()
 
+const PORT = process.env.PORT || 3030
+
 app.use(cors())
 app.use(bodyParser.json())
 
@@ -16,6 +18,6 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(() => console.log('MongoDB db connected')).catch(err => console.log(err))
 
 app.use('/api/users', UserRoutes)
-app.listen(process.env.PORT, () => {
-  console.log(`Example app listening on port ${process.env.PORT}`)
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`)
 })
