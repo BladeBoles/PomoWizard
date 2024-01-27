@@ -58,33 +58,18 @@ const saveChanges = () => {
         <ul class="settings-modal__timer-settings">
           <li class="settings-modal__timer-setting-item">
             <label for="pomo-timer-length">Pomodoro</label>
-            <input
-              class="settings-modal__timer-length-input"
-              :disabled="timerRunning"
-              id="pomo-timer-length"
-              type="number"
-              v-model="localSettings.pomodoroTimerMinutes"
-            />
+            <input class="settings-modal__timer-length-input" :disabled="timerRunning" id="pomo-timer-length"
+              type="number" v-model="localSettings.pomodoroTimerMinutes" />
           </li>
           <li class="settings-modal__timer-setting-item">
             <label for="short-timer-length">Short Break</label>
-            <input
-              class="settings-modal__timer-length-input"
-              :disabled="timerRunning"
-              id="short-timer-length"
-              type="number"
-              v-model="localSettings.shortBreakTimerMinutes"
-            />
+            <input class="settings-modal__timer-length-input" :disabled="timerRunning" id="short-timer-length"
+              type="number" v-model="localSettings.shortBreakTimerMinutes" />
           </li>
           <li class="settings-modal__timer-setting-item">
             <label for="long-timer-length">Long Break</label>
-            <input
-              class="settings-modal__timer-length-input"
-              :disabled="timerRunning"
-              id="long-timer-length"
-              type="number"
-              v-model="localSettings.longBreakTimerMinutes"
-            />
+            <input class="settings-modal__timer-length-input" :disabled="timerRunning" id="long-timer-length"
+              type="number" v-model="localSettings.longBreakTimerMinutes" />
           </li>
         </ul>
       </fieldset>
@@ -92,33 +77,20 @@ const saveChanges = () => {
         <legend class="settings-modal__legend">Other Settings</legend>
         <ul class="settings-modal__other-settings">
           <li>
-            <input
-              type="checkbox"
-              v-model="localSettings.autoStartTimer"
-              name="auto-start"
-              id="auto-start"
-            />
+            <input type="checkbox" v-model="localSettings.autoStartTimer" name="auto-start" id="auto-start" />
             <label for="auto-start">Automatically start timers</label>
           </li>
           <li>
             <h4>Timer sounds:</h4>
-            <div>
-              <input
-                id="on"
-                :value="true"
-                type="radio"
-                v-model="localSettings.playTimerSounds"
-              />
-              <label for="on">On</label>
-            </div>
-            <div>
-              <input
-                id="off"
-                :value="false"
-                type="radio"
-                v-model="localSettings.playTimerSounds"
-              />
-              <label for="off">Off</label>
+            <div class="settings-modal__sound-toggle">
+              <div>
+                <input id="on" :value="true" type="radio" v-model="localSettings.playTimerSounds" />
+                <label class="sounds-label" for="on">On</label>
+              </div>
+              <div>
+                <input id="off" :value="false" type="radio" v-model="localSettings.playTimerSounds" />
+                <label class="sounds-label" for="off">Off</label>
+              </div>
             </div>
           </li>
         </ul>
@@ -129,7 +101,42 @@ const saveChanges = () => {
     </div>
   </div>
 </template>
+
 <style scoped>
+input[type="radio"] {
+  display: none;
+}
+
+.sounds-label {
+  display: inline-block;
+  padding: 8px 16px;
+  margin: 0;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  transition: background-color 0.3s;
+}
+
+input[type="radio"]:checked+.sounds-label {
+  background-color: #4caf50;
+  color: white;
+}
+
+li>div {
+  display: inline-block;
+}
+
+h4,
+li>div {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.settings-modal__sound-toggle {
+  display: flex;
+}
+
 .settings-modal__overlay {
   position: fixed;
   top: 0;
@@ -150,18 +157,18 @@ const saveChanges = () => {
   align-items: center;
   text-align: center;
   background-color: white;
-  max-width: 320px;
   padding: 40px 10px 10px 10px;
   border-radius: 20px;
   font-size: 18px;
   color: rgb(85, 85, 85);
 }
+
 .settings-modal__timer-settings {
   display: flex;
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: 300px;
+  width: 320px;
   justify-content: space-between;
 }
 
@@ -173,6 +180,7 @@ const saveChanges = () => {
 
 .settings-modal__timer-setting-item label {
   text-align: left;
+  font-size: 14px;
 }
 
 .settings-modal__other-settings {
@@ -182,14 +190,17 @@ const saveChanges = () => {
   margin: 0;
   padding: 0;
 }
+
 .settings-modal__timer-length-input {
   width: 60px;
   font-size: 20px;
   color: rgb(85, 85, 85);
 }
+
 .settings-modal__legend {
   font-size: 20px;
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
 fieldset {
