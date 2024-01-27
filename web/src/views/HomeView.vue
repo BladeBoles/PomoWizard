@@ -2,7 +2,7 @@
 import GenericTimer from '@/components/GenericTimer.vue'
 import GenericStopwatch from '@/components/GenericStopwatch.vue'
 import SettingsModal from '@/modals/SettingsModal.vue'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, warn } from 'vue'
 import { useUserStore } from '@/stores/user'
 import AuthServices from '@/services/AuthServices'
 import { RouterLink } from 'vue-router'
@@ -25,7 +25,7 @@ const shortBreakTimerMinutes = ref(5)
 const longBreakTimerMinutes = ref(15)
 const timerRunning = ref(false)
 const autoStartTimer = ref(false)
-const playTimerSounds = ref(false)
+const playTimerSounds = ref(true)
 
 const showSettings = ref(false)
 
@@ -137,98 +137,61 @@ const updateSettings = (newSettings: any) => {
   <div class="home-view">
     <div class="home-view__header">
       <h1>PomoWizard</h1>
-      <button
-        class="home-view__settings-button"
-        v-if="!showSettings"
-        @click="() => (showSettings = true)"
-      >
-        <i class="fa-solid fa-cog"></i>
-        <span class="home-view__settings-word">Settings</span>
-      </button>
+      <div><button class="home-view__settings-button" v-if="!showSettings" @click="() => (showSettings = true)">
+          <i class="fa-solid fa-cog"></i>
+          <span class="home-view__settings-word">Settings</span>
+        </button>
+        <button class="home-view__settings-button">
+          <RouterLink v-if="!store.getUser.token" to="/login">
+            <i class="fa-solid fa-sign-in"></i>
+            <span class="home-view__settings-word">
+              Login
+            </span>
+          </RouterLink>
+        </button>
+      </div>
     </div>
-    <SettingsModal
-      :timer-running="timerRunning"
-      :play-timer-sounds="playTimerSounds"
-      :auto-start-timer="autoStartTimer"
-      :short-break-timer-minutes="shortBreakTimerMinutes"
-      :long-break-timer-minutes="longBreakTimerMinutes"
-      :pomodoro-timer-minutes="pomodoroTimerMinutes"
-      @update="(settings) => updateSettings(settings)"
-      v-if="showSettings"
-    />
+    <SettingsModal :timer-running="timerRunning" :play-timer-sounds="playTimerSounds" :auto-start-timer="autoStartTimer"
+      :short-break-timer-minutes="shortBreakTimerMinutes" :long-break-timer-minutes="longBreakTimerMinutes"
+      :pomodoro-timer-minutes="pomodoroTimerMinutes" @update="(settings) => updateSettings(settings)"
+      v-if="showSettings" />
     <template v-if="store.getUser.token">
-    <h3 >
-      Hello {{ store.getUser.email}}
-    </h3>
-  </template>
-  <template v-else>
-    <RouterLink to="/login">Login</RouterLink>
-  </template>
-    
+      <h3>
+        Hello {{ store.getUser.email }}
+      </h3>
+    </template>
+
+
+
+
     <div class="home-view__timer-group">
       <fieldset>
         <legend class="home-view__timer-legend">Timer Type</legend>
         <div>
-          <input
-            type="radio"
-            id="timer1"
-            name="timer-type"
-            value="Pomodoro"
-            v-model="timerType"
-            class="home-view__radio-input"
-          />
+          <input type="radio" id="timer1" name="timer-type" value="Pomodoro" v-model="timerType"
+            class="home-view__radio-input" />
           <label class="home-view__radio-label" for="timer1">Pomodoro</label>
         </div>
         <div>
-          <input
-            type="radio"
-            id="timer2"
-            name="timer-type"
-            value="Short Break"
-            v-model="timerType"
-            class="home-view__radio-input"
-          />
+          <input type="radio" id="timer2" name="timer-type" value="Short Break" v-model="timerType"
+            class="home-view__radio-input" />
           <label class="home-view__radio-label" for="timer2">Short Break</label>
         </div>
         <div>
-          <input
-            type="radio"
-            id="timer3"
-            name="timer-type"
-            value="Long Break"
-            v-model="timerType"
-            class="home-view__radio-input"
-          />
+          <input type="radio" id="timer3" name="timer-type" value="Long Break" v-model="timerType"
+            class="home-view__radio-input" />
           <label class="home-view__radio-label" for="timer3">Long Break</label>
         </div>
         <div class="home-view__stopwatch-div">
-          <input
-            type="radio"
-            id="stopwatch"
-            name="timer-type"
-            value="Stopwatch"
-            v-model="timerType"
-            class="home-view__radio-input"
-          />
-          <label class="home-view__radio-label" for="stopwatch"
-            >Stopwatch</label
-          >
+          <input type="radio" id="stopwatch" name="timer-type" value="Stopwatch" v-model="timerType"
+            class="home-view__radio-input" />
+          <label class="home-view__radio-label" for="stopwatch">Stopwatch</label>
         </div>
       </fieldset>
-      <GenericStopwatch
-        v-if="timerType === 'Stopwatch'"
-        @finished="handleStopWatchFinished"
-      />
-      <GenericTimer
-        :timer-minutes="timerMinutes"
-        :timer-type="timerType"
-        :auto-start-timer="autoStartTimer"
-        :play-timer-sounds="playTimerSounds"
-        @finished="handleTimerFinished"
-        @stopped="handleTimerStopped"
-        @started="handleTimerStarted"
-        v-else
-      />
+      <GenericStopwatch v-if="timerType === 'Stopwatch'" @finished="handleStopWatchFinished" />
+      <GenericTimer :timer-minutes="timerMinutes" :timer-type="timerType" :auto-start-timer="autoStartTimer"
+        :play-timer-sounds="playTimerSounds" @finished="handleTimerFinished" @stopped="handleTimerStopped"
+        @started="handleTimerStarted" v-else />
     </div>
     <div class="home-view__info-section">
       <div>
@@ -258,9 +221,11 @@ const updateSettings = (newSettings: any) => {
   border-bottom: 1px solid #4b4e5a;
   margin-bottom: 30px;
 }
+
 .home-view__header h1 {
   margin: 5px 0;
 }
+
 .home-view__settings-button {
   background-color: #656874;
   color: white;
@@ -268,13 +233,22 @@ const updateSettings = (newSettings: any) => {
   align-self: center;
   font-size: 18px;
   border-radius: 6px;
+  margin-right: 5px;
 }
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .home-view__settings-word {
   display: none;
 }
+
 p {
   margin: 0px;
 }
+
 .home-view {
   display: flex;
   flex-direction: column;
@@ -287,6 +261,7 @@ p {
   height: 0;
   margin-bottom: 25px;
 }
+
 .home-view__radio-label {
   border: 3px solid transparent;
   padding: 5px;
@@ -295,7 +270,8 @@ p {
   font-size: 20px;
   white-space: nowrap;
 }
-.home-view__radio-input:checked + .home-view__radio-label {
+
+.home-view__radio-input:checked+.home-view__radio-label {
   background-color: #4d505c;
   border-radius: 6px;
 }
@@ -303,6 +279,7 @@ p {
 .home-view__timer-legend {
   visibility: hidden;
 }
+
 fieldset {
   border: none;
 }
@@ -325,6 +302,7 @@ fieldset {
 .home-view__stopwatch-div {
   width: 100%;
 }
+
 .home-view__info-section {
   margin-top: 20px;
   font-size: 20px;
@@ -346,10 +324,12 @@ fieldset {
   .home-view__header {
     width: 580px;
   }
+
   .home-view__settings-word {
     display: inline;
     margin-left: 5px;
   }
+
   .home-view__timer-group {
     width: 650px;
   }
