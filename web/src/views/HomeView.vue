@@ -2,7 +2,7 @@
 import GenericTimer from '@/components/GenericTimer.vue'
 import GenericStopwatch from '@/components/GenericStopwatch.vue'
 import SettingsModal from '@/modals/SettingsModal.vue'
-import { ref, computed, onMounted, warn } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import AuthServices from '@/services/AuthServices'
 import { RouterLink } from 'vue-router'
@@ -48,10 +48,6 @@ const timerMinutes = computed(() => {
 onMounted(async () => {
   if (store.getUser.token) {
     const userProfile = await AuthServices.getUserProfile(store.getUser.token)
-    console.log(
-      '🚀 ~ file: HomeView.vue:50 ~ onMounted ~ userProfile:',
-      userProfile.data
-    )
 
     finishedPomos.value = userProfile.data.totalPomodoros
   }
@@ -160,10 +156,6 @@ const updateSettings = (newSettings: any) => {
         Hello {{ store.getUser.email }}
       </h3>
     </template>
-
-
-
-
     <div class="home-view__timer-group">
       <fieldset>
         <legend class="home-view__timer-legend">Timer Type</legend>
