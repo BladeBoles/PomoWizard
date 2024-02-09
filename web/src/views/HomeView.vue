@@ -133,57 +133,100 @@ const updateSettings = (newSettings: any) => {
   <div class="home-view">
     <div class="home-view__header">
       <h1>PomoWizard</h1>
-      <div><button class="home-view__settings-button" v-if="!showSettings" @click="() => (showSettings = true)">
+      <div>
+        <button
+          class="home-view__settings-button"
+          v-if="!showSettings"
+          @click="() => (showSettings = true)"
+        >
           <i class="fa-solid fa-cog"></i>
           <span class="home-view__settings-word">Settings</span>
         </button>
         <button class="home-view__settings-button">
           <RouterLink v-if="!store.getUser.token" to="/login">
             <i class="fa-solid fa-sign-in"></i>
-            <span class="home-view__settings-word">
-              Login
-            </span>
+            <span class="home-view__settings-word"> Login </span>
           </RouterLink>
         </button>
       </div>
     </div>
-    <SettingsModal :timer-running="timerRunning" :play-timer-sounds="playTimerSounds" :auto-start-timer="autoStartTimer"
-      :short-break-timer-minutes="shortBreakTimerMinutes" :long-break-timer-minutes="longBreakTimerMinutes"
-      :pomodoro-timer-minutes="pomodoroTimerMinutes" @update="(settings) => updateSettings(settings)"
-      v-if="showSettings" />
+    <SettingsModal
+      :timer-running="timerRunning"
+      :play-timer-sounds="playTimerSounds"
+      :auto-start-timer="autoStartTimer"
+      :short-break-timer-minutes="shortBreakTimerMinutes"
+      :long-break-timer-minutes="longBreakTimerMinutes"
+      :pomodoro-timer-minutes="pomodoroTimerMinutes"
+      @update="(settings) => updateSettings(settings)"
+      v-if="showSettings"
+    />
     <template v-if="store.getUser.token">
-      <h3>
-        Hello {{ store.getUser.email }}
-      </h3>
+      <h3>Hello {{ store.getUser.email }}</h3>
     </template>
     <div class="home-view__timer-group">
       <fieldset>
         <legend class="home-view__timer-legend">Timer Type</legend>
         <div>
-          <input type="radio" id="timer1" name="timer-type" value="Pomodoro" v-model="timerType"
-            class="home-view__radio-input" />
+          <input
+            type="radio"
+            id="timer1"
+            name="timer-type"
+            value="Pomodoro"
+            v-model="timerType"
+            class="home-view__radio-input"
+          />
           <label class="home-view__radio-label" for="timer1">Pomodoro</label>
         </div>
         <div>
-          <input type="radio" id="timer2" name="timer-type" value="Short Break" v-model="timerType"
-            class="home-view__radio-input" />
+          <input
+            type="radio"
+            id="timer2"
+            name="timer-type"
+            value="Short Break"
+            v-model="timerType"
+            class="home-view__radio-input"
+          />
           <label class="home-view__radio-label" for="timer2">Short Break</label>
         </div>
         <div>
-          <input type="radio" id="timer3" name="timer-type" value="Long Break" v-model="timerType"
-            class="home-view__radio-input" />
+          <input
+            type="radio"
+            id="timer3"
+            name="timer-type"
+            value="Long Break"
+            v-model="timerType"
+            class="home-view__radio-input"
+          />
           <label class="home-view__radio-label" for="timer3">Long Break</label>
         </div>
         <div class="home-view__stopwatch-div">
-          <input type="radio" id="stopwatch" name="timer-type" value="Stopwatch" v-model="timerType"
-            class="home-view__radio-input" />
-          <label class="home-view__radio-label" for="stopwatch">Stopwatch</label>
+          <input
+            type="radio"
+            id="stopwatch"
+            name="timer-type"
+            value="Stopwatch"
+            v-model="timerType"
+            class="home-view__radio-input"
+          />
+          <label class="home-view__radio-label" for="stopwatch"
+            >Stopwatch</label
+          >
         </div>
       </fieldset>
-      <GenericStopwatch v-if="timerType === 'Stopwatch'" @finished="handleStopWatchFinished" />
-      <GenericTimer :timer-minutes="timerMinutes" :timer-type="timerType" :auto-start-timer="autoStartTimer"
-        :play-timer-sounds="playTimerSounds" @finished="handleTimerFinished" @stopped="handleTimerStopped"
-        @started="handleTimerStarted" v-else />
+      <GenericStopwatch
+        v-if="timerType === 'Stopwatch'"
+        @finished="handleStopWatchFinished"
+      />
+      <GenericTimer
+        :timer-minutes="timerMinutes"
+        :timer-type="timerType"
+        :auto-start-timer="autoStartTimer"
+        :play-timer-sounds="playTimerSounds"
+        @finished="handleTimerFinished"
+        @stopped="handleTimerStopped"
+        @started="handleTimerStarted"
+        v-else
+      />
     </div>
     <div class="home-view__info-section">
       <div>
@@ -263,7 +306,7 @@ p {
   white-space: nowrap;
 }
 
-.home-view__radio-input:checked+.home-view__radio-label {
+.home-view__radio-input:checked + .home-view__radio-label {
   background-color: #4d505c;
   border-radius: 6px;
 }

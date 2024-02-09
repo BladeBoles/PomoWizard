@@ -8,52 +8,56 @@ interface UpdateFields {
 }
 export default {
   signUserUp: async (email: string, password: string) => {
-    const response = await axios.post(`${import.meta.env.VITE_API_HOST}/api/users/register`, {
-      email,
-      password
-    }).then((response) => {
-      return response
-    }, (error) => {
-      return error
-    })
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_HOST}/api/users/register`,
+      {
+        email,
+        password
+      }
+    )
     return response
   },
   logUserIn: async (email: string, password: string) => {
-    console.log('ENV VALUES???', import.meta.env)
-    const response = await axios.post(`${import.meta.env.VITE_API_HOST}/api/users/login`, {
-      email,
-      password
-    }).then((response) => {
-      return response
-    }, (error) => {
-      return error
-    })
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_HOST}/api/users/login`,
+      {
+        email,
+        password
+      }
+    )
     return response
   },
-  updateUserProfile: async (token: string, email: string, updateFields: UpdateFields) => {
-    const { totalFocusMinutes,
-      totalPomodoros,
-      pomodorosSinceLongBreak,
-      totalStopwatchSessions } = updateFields
-    const response = await axios.post(`${import.meta.env.VITE_API_HOST}/api/users/profile`, {
-      email,
+  updateUserProfile: async (
+    token: string,
+    email: string,
+    updateFields: UpdateFields
+  ) => {
+    const {
       totalFocusMinutes,
       totalPomodoros,
       pomodorosSinceLongBreak,
       totalStopwatchSessions
-    }, { headers: { Authorization: `Bearer ${token}` } }).then((response) => {
-      return response
-    }, (error) => {
-      return error
-    })
+    } = updateFields
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_HOST}/api/users/profile`,
+      {
+        email,
+        totalFocusMinutes,
+        totalPomodoros,
+        pomodorosSinceLongBreak,
+        totalStopwatchSessions
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
     return response
   },
   getUserProfile: async (token: string) => {
-    const response = await axios.get(`${import.meta.env.VITE_API_HOST}/api/users/profile`, { headers: { Authorization: `Bearer ${token}` } }).then((response) => {
-      return response
-    }, (error) => {
-      return error
-    })
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_HOST}/api/users/profile`,
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    )
     return response
   }
 }

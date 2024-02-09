@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, warn } from 'vue'
 import AuthServices from '../services/AuthServices'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
@@ -12,45 +12,93 @@ const signupPassword = ref('')
 const signupEmail = ref('')
 const loginPassword = ref('')
 const loginEmail = ref('')
+const errorMessage = ref('')
 
 const signUp = async () => {
-  await AuthServices.signUserUp(signupEmail.value, signupPassword.value)
+  try {
+    await AuthServices.signUserUp(signupEmail.value, signupPassword.value)
+  } catch (error) {
+    if (error instanceof Error) {
+      errorMessage.value = error.message
+    } else {
+      errorMessage.value = 'An error has occurred, please try again.'
+    }
+  }
 }
 const logIn = async () => {
-  const logInResponse = await AuthServices.logUserIn(
-    loginEmail.value,
-    loginPassword.value
-  )
-  store.saveUser(logInResponse.data)
-  if (store.getUser.token) {
-    router.push({
-      name: 'home'
-    })
+  try {
+    const logInResponse = await AuthServices.logUserIn(
+      loginEmail.value,
+      loginPassword.value
+    )
+    console.log('log in response is', logInResponse)
+    store.saveUser(logInResponse.data)
+    if (store.getUser?.token) {
+      router.push({
+        name: 'home'
+      })
+    }
+  } catch (error) {
+    console.log('error is', error)
+    if (error instanceof Error) {
+      errorMessage.value = error.message
+    } else {
+      errorMessage.value = 'An error has occurred, please try again.'
+    }
   }
 }
 </script>
 
 <template>
   <div class="login-view">
+    <div class="login-view-error">{{ errorMessage }}</div>
     <div class="login-view-sizer">
       <fieldset class="tab-selector">
         <div class="tab-option">
-          <input type="radio" id="login-choice" name="choice" value="Log In" v-model="loginChoice" class="tab-radio" />
+          <input
+            type="radio"
+            id="login-choice"
+            name="choice"
+            value="Log In"
+            v-model="loginChoice"
+            class="tab-radio"
+          />
           <label class="tab-label" for="login-choice">Log In</label>
         </div>
         <div class="tab-option">
-          <input type="radio" id="signup-choice" name="choice" value="Sign Up" v-model="loginChoice" class="tab-radio" />
+          <input
+            type="radio"
+            id="signup-choice"
+            name="choice"
+            value="Sign Up"
+            v-model="loginChoice"
+            class="tab-radio"
+          />
           <label class="tab-label" for="signup-choice">Sign Up</label>
         </div>
       </fieldset>
-      <form @submit.prevent="signUp" class="login-view__signup-form" v-if="loginChoice === 'Sign Up'">
+      <form
+        @submit.prevent="signUp"
+        class="login-view__signup-form"
+        v-if="loginChoice === 'Sign Up'"
+      >
         <div class="login-view__signup-form-section">
           <label for="signup-email"> Email: </label>
-          <input v-model="signupEmail" type="email" id="signup-email" required />
+          <input
+            v-model="signupEmail"
+            type="email"
+            id="signup-email"
+            required
+          />
         </div>
         <div class="login-view__signup-form-section">
           <label for="signup-password"> Password: </label>
-          <input v-model="signupPassword" type="password" id="signup-password" required />
+          <input
+            v-model="signupPassword"
+            type="password"
+            id="signup-password"
+            required
+          />
         </div>
         <button>Create Account</button>
       </form>
@@ -61,7 +109,12 @@ const logIn = async () => {
         </div>
         <div class="login-view__login-form-section">
           <label for="login-password"> Password: </label>
-          <input v-model="loginPassword" type="password" id="login-password" required />
+          <input
+            v-model="loginPassword"
+            type="password"
+            id="login-password"
+            required
+          />
         </div>
         <button>Log In</button>
       </form>
@@ -70,6 +123,11 @@ const logIn = async () => {
 </template>
 
 <style scoped>
+.login-view-error {
+  color: red;
+  font-size: 36px;
+  font-style: bold;
+}
 label {
   margin-bottom: 0;
   padding-bottom: 0;
@@ -116,8 +174,8 @@ label {
 }
 
 /* Style for the label when its radio button is checked */
-.tab-radio:checked+.tab-label {
-  background-color: #4CAF50;
+.tab-radio:checked + .tab-label {
+  background-color: #4caf50;
   color: white;
   border-bottom: none;
   position: relative;
@@ -168,8 +226,8 @@ label {
   font-weight: bold;
 }
 
-input[type="email"],
-input[type="password"] {
+input[type='email'],
+input[type='password'] {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
@@ -183,7 +241,7 @@ button {
   padding: 10px;
   border: none;
   border-radius: 4px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   font-size: 1em;
   cursor: pointer;
