@@ -29,6 +29,8 @@ const playTimerSounds = ref(true)
 
 const showSettings = ref(false)
 
+const userProfile = ref({})
+
 const timerMinutes = computed(() => {
   let minutes = 0
   switch (timerType.value) {
@@ -246,6 +248,7 @@ const updateSettings = (newSettings: any) => {
         <span>{{ totalFocusMinutes.toFixed(1) }}</span>
       </div>
     </div>
+    <div>User Profile: {{ userProfile }}</div>
   </div>
 </template>
 <style scoped>
