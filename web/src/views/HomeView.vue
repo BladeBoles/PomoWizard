@@ -2,7 +2,7 @@
 import GenericTimer from '@/components/GenericTimer.vue'
 import GenericStopwatch from '@/components/GenericStopwatch.vue'
 import SettingsModal from '@/modals/SettingsModal.vue'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, warn } from 'vue'
 import { useUserStore } from '@/stores/user'
 import AuthServices from '@/services/AuthServices'
 import { RouterLink } from 'vue-router'
@@ -79,18 +79,19 @@ const updateUser = async () => {
   }
 }
 const handleTimerFinished = (e: any) => {
-  totalFocusMinutes.value += e.focusSeconds / 60
-
+  if (timerType.value === 'Long Break') {
+    pomosSinceLastLongBreak.value = 0
+  }
   if (timerType.value === 'Short Break' || timerType.value === 'Long Break') {
     timerType.value = 'Pomodoro'
   } else {
+    totalFocusMinutes.value += e.focusSeconds / 60
     pomosSinceLastLongBreak.value++
     finishedPomos.value++
     updateUser()
 
     if (pomosSinceLastLongBreak.value > 3) {
       timerType.value = 'Long Break'
-      pomosSinceLastLongBreak.value = 0
     } else {
       timerType.value = 'Short Break'
     }
