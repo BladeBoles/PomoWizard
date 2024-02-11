@@ -6,6 +6,15 @@ interface UpdateFields {
   pomodorosSinceLongBreak?: number
   totalStopwatchSessions?: number
 }
+interface UpdateUserProfileResponse {
+  focusMinutes?: Number
+  totalPomodoros?: Number
+  pomodorosSinceLongBreak?: Number
+  totalStopwatchSessions?: Number
+  experiencePoints?: Number
+  level?: Number
+  specialty?: String
+}
 export default {
   signUserUp: async (email: string, password: string) => {
     const response = await axios.post(
@@ -38,7 +47,7 @@ export default {
       pomodorosSinceLongBreak,
       totalStopwatchSessions
     } = updateFields
-    const response = await axios.post(
+    const response = await axios.post<UpdateUserProfileResponse>(
       `${import.meta.env.VITE_API_HOST}/api/users/profile`,
       {
         email,

@@ -2,11 +2,20 @@
 import GenericTimer from '@/components/GenericTimer.vue'
 import GenericStopwatch from '@/components/GenericStopwatch.vue'
 import SettingsModal from '@/modals/SettingsModal.vue'
-import { ref, computed, onMounted, warn } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import AuthServices from '@/services/AuthServices'
 import { RouterLink } from 'vue-router'
 
+interface UpdateUserProfileResponse {
+  focusMinutes?: Number
+  totalPomodoros?: Number
+  pomodorosSinceLongBreak?: Number
+  totalStopwatchSessions?: Number
+  experiencePoints?: Number
+  level?: Number
+  specialty?: String
+}
 const store = useUserStore()
 
 const timerType = ref('Pomodoro')
@@ -25,7 +34,7 @@ const autoStartTimer = ref(false)
 const playTimerSounds = ref(true)
 
 const showSettings = ref(false)
-const userProfile = ref({})
+const userProfile = ref<UpdateUserProfileResponse>({})
 const timerMinutes = computed(() => {
   let minutes = 0
   switch (timerType.value) {
@@ -52,9 +61,9 @@ onMounted(async () => {
   }
 })
 
-const updateUser = () => {
+const updateUser = async () => {
   if (store.getUser.email && store.getUser.token) {
-    const updatedUser = AuthServices.updateUserProfile(
+    const updatedUser = await AuthServices.updateUserProfile(
       store.getUser.token,
       store.getUser.email,
       {
@@ -62,10 +71,11 @@ const updateUser = () => {
           ? store.getUser.totalPomodoros + 1
           : finishedPomos.value,
         totalFocusMinutes:
-          store.getUser?.totalFocusMinutes ?? totalFocusMinutes.value
+          store.getUser?.totalFocusMinutes ?? totalFocusMinutes.value,
+        pomodorosSinceLongBreak: pomosSinceLastLongBreak.value
       }
     )
-    userProfile.value = updatedUser
+    userProfile.value = updatedUser.data
   }
 }
 const handleTimerFinished = (e: any) => {
