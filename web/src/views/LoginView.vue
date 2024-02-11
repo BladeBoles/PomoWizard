@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, warn } from 'vue'
+import { ref } from 'vue'
 import AuthServices from '../services/AuthServices'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
@@ -51,6 +51,12 @@ const logIn = async () => {
 
 <template>
   <div class="login-view">
+    <button class="home-view__settings-button">
+      <RouterLink class="home-view__settings-button" to="/">
+        <i class="fa-solid fa-home"></i>
+        <span class="home-view__settings-word"> Home </span>
+      </RouterLink>
+    </button>
     <div class="login-view-error">{{ errorMessage }}</div>
     <div class="login-view-sizer">
       <fieldset class="tab-selector">
@@ -100,7 +106,7 @@ const logIn = async () => {
             required
           />
         </div>
-        <button>Create Account</button>
+        <button class="login-view__account-buttons">Create Account</button>
       </form>
       <form @submit.prevent="logIn" v-else class="login-view__login-form">
         <div class="login-view__login-form-section">
@@ -116,13 +122,26 @@ const logIn = async () => {
             required
           />
         </div>
-        <button>Log In</button>
+        <button class="login-view__account-buttons">Log In</button>
       </form>
     </div>
   </div>
 </template>
 
 <style scoped>
+.home-view__settings-button {
+  background-color: #656874;
+  color: white;
+  padding: 6px;
+  align-self: center;
+  font-size: 18px;
+  border-radius: 6px;
+  margin-right: 5px;
+  display: flex;
+  width: 120px;
+  text-decoration: none;
+  justify-content: space-between;
+}
 .login-view-error {
   color: red;
   font-size: 36px;
@@ -236,7 +255,7 @@ input[type='password'] {
   box-sizing: border-box;
 }
 
-button {
+.login-view__account-buttons {
   width: 100%;
   padding: 10px;
   border: none;
@@ -248,7 +267,7 @@ button {
   transition: background-color 0.3s;
 }
 
-button:hover {
+.login-view__account-buttons:hover {
   background-color: #45a049;
 }
 </style>
