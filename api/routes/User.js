@@ -4,12 +4,11 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const authMiddleware = require('../middlewares/auth')
 
-
 const router = Router()
 
 router.post('/register', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
@@ -43,9 +42,14 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Authentication failed' })
     }
 
-    const token = jwt.sign({
-      userId: user._id, email: user.email
-    }, 'secretkey', { expiresIn: '1h' })
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        email: user.email
+      },
+      'secretkey',
+      { expiresIn: '1h' }
+    )
 
     res.status(200).json({ token, email })
   } catch (err) {
@@ -57,24 +61,56 @@ router.post('/login', async (req, res) => {
 router.post('/profile', authMiddleware, async (req, res) => {
   console.log('🚀 ~ file: User.js:58 ~ router.post ~ req:', req.body)
   const { email } = req.userData
-  const { totalFocusMinutes, totalPomodoros, pomodorosSinceLongBreak, totalStopwatchSessions } = req.body
+  const {
+    totalFocusMinutes,
+    totalPomodoros,
+    pomodorosSinceLongBreak,
+    totalStopwatchSessions
+  } = req.body
 
+  const currentUser = await User.findOne({
+    email
+  })
+  const newTotalExperience =
+    currentUser.experiencePoints +
+    (totalFocusMinutes
+      ? totalFocusMinutes - currentUser.totalFocusMinutes
+      : 0) *
+      10
+  const newLevel = parseInt((newTotalExperience + 1000) / 1000)
   const updateFields = {
     ...(typeof totalFocusMinutes === 'number' && { totalFocusMinutes }),
     ...(typeof totalPomodoros === 'number' && { totalPomodoros }),
-    ...(typeof pomodorosSinceLongBreak === 'number' && { pomodorosSinceLongBreak }),
-    ...(typeof totalStopwatchSessions === 'number' && { totalStopwatchSessions })
+    ...(typeof pomodorosSinceLongBreak === 'number' && {
+      pomodorosSinceLongBreak
+    }),
+    ...(typeof totalStopwatchSessions === 'number' && {
+      totalStopwatchSessions
+    }),
+    experiencePoints: newTotalExperience,
+    level: newLevel
   }
-  console.log('🚀 ~ file: User.js:63 ~ router.post ~ updateFields:', updateFields)
-  const userProfile = await User.updateOne({ email }, { ...updateFields })
+  console.log(
+    '🚀 ~ file: User.js:63 ~ router.post ~ updateFields:',
+    updateFields
+  )
+  await User.updateOne({ email }, { ...updateFields })
   const updatedUser = await User.findOne({
     email
   })
-  console.log('🚀 ~ file: User.js:73 ~ router.post ~ updatedUser:', updatedUser.totalPomodoros)
+  console.log(
+    '🚀 ~ file: User.js:73 ~ router.post ~ updatedUser:',
+    updatedUser.totalPomodoros
+  )
 
   res.json({
-    totalFocusMinutes: updatedUser.totalFocusMinutes, totalPomodoros: updatedUser.totalPomodoros, pomodorosSinceLongBreak: updatedUser.pomodorosSinceLongBreak,
-    totalStopwatchSessions: updatedUser.totalStopwatchSessions
+    focusMinutes: updatedUser.totalFocusMinutes,
+    totalPomodoros: updatedUser.totalPomodoros,
+    pomodorosSinceLongBreak: updatedUser.pomodorosSinceLongBreak,
+    totalStopwatchSessions: updatedUser.totalStopwatchSessions,
+    experiencePoints: updatedUser.experiencePoints,
+    level: updatedUser.level,
+    specialty: updatedUser.specialty
   })
 })
 router.get('/profile', authMiddleware, async (req, res) => {
@@ -85,8 +121,13 @@ router.get('/profile', authMiddleware, async (req, res) => {
   res.json({
     email: userProfile.email,
     userId: userProfile._id,
-    focusMinutes: userProfile.totalFocusMinutes, totalPomodoros: userProfile.totalPomodoros, pomodorosSinceLongBreak: userProfile.pomodorosSinceLongBreak,
-    totalStopwatchSessions: userProfile.totalStopwatchSessions
+    focusMinutes: userProfile.totalFocusMinutes,
+    totalPomodoros: userProfile.totalPomodoros,
+    pomodorosSinceLongBreak: userProfile.pomodorosSinceLongBreak,
+    totalStopwatchSessions: userProfile.totalStopwatchSessions,
+    experiencePoints: userProfile.experiencePoints,
+    level: userProfile.level,
+    specialty: userProfile.specialty
   })
 })
 
@@ -94,3 +135,4 @@ router.get('/', async (req, res) => {
   res.send('Hello world')
 })
 module.exports = router
+

@@ -25,9 +25,22 @@ const userSchema = new Schema({
   pomodorosSinceLongBreak: {
     type: Number,
     default: 0
+  },
+  experiencePoints: {
+    type: Number,
+    default: 0
+  },
+  level: {
+    type: Number,
+    default: 1
+  },
+  specialty: {
+    type: String,
+    default: 'Fire Mage'
   }
 })
 
 const User = model('User', userSchema)
 
 module.exports = User
+
