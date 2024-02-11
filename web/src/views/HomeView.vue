@@ -2,7 +2,7 @@
 import GenericTimer from '@/components/GenericTimer.vue'
 import GenericStopwatch from '@/components/GenericStopwatch.vue'
 import SettingsModal from '@/modals/SettingsModal.vue'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, warn } from 'vue'
 import { useUserStore } from '@/stores/user'
 import AuthServices from '@/services/AuthServices'
 import { RouterLink } from 'vue-router'
@@ -11,9 +11,6 @@ const store = useUserStore()
 
 const timerType = ref('Pomodoro')
 const finishedPomos = ref(0)
-const computedFinishedPomos = computed(
-  () => store.getUser.totalPomodoros || finishedPomos.value
-)
 
 const pomosSinceLastLongBreak = ref(0)
 
@@ -28,9 +25,7 @@ const autoStartTimer = ref(false)
 const playTimerSounds = ref(true)
 
 const showSettings = ref(false)
-
 const userProfile = ref({})
-
 const timerMinutes = computed(() => {
   let minutes = 0
   switch (timerType.value) {
@@ -49,12 +44,30 @@ const timerMinutes = computed(() => {
 
 onMounted(async () => {
   if (store.getUser.token) {
-    const userProfile = await AuthServices.getUserProfile(store.getUser.token)
-
-    finishedPomos.value = userProfile.data.totalPomodoros
+    const userProfileResponse = await AuthServices.getUserProfile(
+      store.getUser.token
+    )
+    userProfile.value = userProfileResponse.data
+    finishedPomos.value = userProfileResponse.data.totalPomodoros
   }
 })
 
+const updateUser = () => {
+  if (store.getUser.email && store.getUser.token) {
+    const updatedUser = AuthServices.updateUserProfile(
+      store.getUser.token,
+      store.getUser.email,
+      {
+        totalPomodoros: store.getUser.totalPomodoros
+          ? store.getUser.totalPomodoros + 1
+          : finishedPomos.value,
+        totalFocusMinutes:
+          store.getUser?.totalFocusMinutes ?? totalFocusMinutes.value
+      }
+    )
+    userProfile.value = updatedUser
+  }
+}
 const handleTimerFinished = (e: any) => {
   totalFocusMinutes.value += e.focusSeconds / 60
 
@@ -63,14 +76,7 @@ const handleTimerFinished = (e: any) => {
   } else {
     pomosSinceLastLongBreak.value++
     finishedPomos.value++
-    // TODO: clean up this update method
-    if (store.getUser.email && store.getUser.token) {
-      AuthServices.updateUserProfile(store.getUser.token, store.getUser.email, {
-        totalPomodoros: store.getUser.totalPomodoros
-          ? store.getUser.totalPomodoros + 1
-          : finishedPomos.value
-      })
-    }
+    updateUser()
 
     if (pomosSinceLastLongBreak.value > 3) {
       timerType.value = 'Long Break'
@@ -99,6 +105,7 @@ const handleStopWatchFinished = (e: any) => {
     )
     successAudio.play()
   }
+  updateUser()
 }
 
 const handleTimerStopped = () => {
@@ -109,6 +116,7 @@ const handleTimerStopped = () => {
     )
     stoppedAudio.play()
   }
+  updateUser()
 }
 
 const handleTimerStarted = () => {
@@ -164,6 +172,10 @@ const updateSettings = (newSettings: any) => {
     />
     <template v-if="store.getUser.token">
       <h3>Hello {{ store.getUser.email }}</h3>
+      <h4>
+        <span v-if="userProfile.level || userProfile.specialty">Level</span>
+        {{ userProfile.level }} {{ userProfile.specialty }}
+      </h4>
     </template>
     <div class="home-view__timer-group">
       <fieldset>

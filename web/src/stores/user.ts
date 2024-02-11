@@ -8,6 +8,9 @@ interface UserType {
   pomodorosSinceLongBreak?: number
   totalStopwatchSessions?: number
   totalFocusMinutes?: number
+  level?: number
+  specialty?: string
+  experiencePoints?: number
 }
 export const useUserStore = defineStore('user', {
   state: () => ({ user: {} as UserType }),
@@ -17,7 +20,6 @@ export const useUserStore = defineStore('user', {
   actions: {
     saveUser(user: UserType) {
       this.$state.user = user
-    },
-  },
+    }
+  }
 })
-
