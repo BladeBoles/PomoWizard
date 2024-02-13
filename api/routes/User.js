@@ -3,6 +3,7 @@ const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const authMiddleware = require('../middlewares/auth')
+const asyncHandler = require('express-async-handler')
 
 const router = Router()
 
@@ -26,8 +27,9 @@ router.post('/register', async (req, res) => {
   }
 })
 
-router.post('/login', async (req, res) => {
-  try {
+router.post(
+  '/login',
+  asyncHandler(async (req, res) => {
     const { email, password } = req.body
 
     const user = await User.findOne({ email })
@@ -52,14 +54,42 @@ router.post('/login', async (req, res) => {
     )
 
     res.status(200).json({ token, email })
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-})
+  })
+)
+
+// router.post('/login', async (req, res) => {
+//   try {
+//     const { email, password } = req.body
+//
+//     const user = await User.findOne({ email })
+//
+//     if (!user) {
+//       return res.status(401).json({ message: 'Authentication failed' })
+//     }
+//
+//     const passwordMatch = await bcrypt.compare(password, user.password)
+//
+//     if (!passwordMatch) {
+//       return res.status(401).json({ message: 'Authentication failed' })
+//     }
+//
+//     const token = jwt.sign(
+//       {
+//         userId: user._id,
+//         email: user.email
+//       },
+//       'secretkey',
+//       { expiresIn: '1h' }
+//     )
+//
+//     res.status(200).json({ token, email })
+//   } catch (err) {
+//     console.error(err)
+//     res.status(500).json({ message: 'Internal server error' })
+//   }
+// })
 
 router.post('/profile', authMiddleware, async (req, res) => {
-  console.log('🚀 ~ file: User.js:58 ~ router.post ~ req:', req.body)
   const { email } = req.userData
   const {
     totalFocusMinutes,
@@ -90,18 +120,10 @@ router.post('/profile', authMiddleware, async (req, res) => {
     experiencePoints: newTotalExperience,
     level: newLevel
   }
-  console.log(
-    '🚀 ~ file: User.js:63 ~ router.post ~ updateFields:',
-    updateFields
-  )
   await User.updateOne({ email }, { ...updateFields })
   const updatedUser = await User.findOne({
     email
   })
-  console.log(
-    '🚀 ~ file: User.js:73 ~ router.post ~ updatedUser:',
-    updatedUser.totalPomodoros
-  )
 
   res.json({
     focusMinutes: updatedUser.totalFocusMinutes,
@@ -135,4 +157,3 @@ router.get('/', async (req, res) => {
   res.send('Hello world')
 })
 module.exports = router
-
