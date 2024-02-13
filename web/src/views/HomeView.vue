@@ -2,7 +2,7 @@
 import GenericTimer from '@/components/GenericTimer.vue'
 import GenericStopwatch from '@/components/GenericStopwatch.vue'
 import SettingsModal from '@/modals/SettingsModal.vue'
-import { ref, computed, onMounted, warn } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import AuthServices from '@/services/AuthServices'
 import { RouterLink } from 'vue-router'
@@ -271,7 +271,6 @@ const updateSettings = (newSettings: any) => {
         <span>{{ totalFocusMinutes.toFixed(1) }}</span>
       </div>
     </div>
-    <div>User Profile: {{ userProfile }}</div>
   </div>
 </template>
 <style scoped>
