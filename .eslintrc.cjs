@@ -19,6 +19,7 @@ module.exports = {
     ecmaVersion: 'latest'
   },
   rules: {
-    semi: [2, 'never']
+    semi: [2, 'never'],
+    'import/no-commonjs': 'off'
   }
 }
