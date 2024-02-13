@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 
-exports.register_user = asyncHandler(async (req, res, next) => {
+exports.register_user = asyncHandler(async (req, res) => {
   const { email, password } = req.body
 
   const hashedPassword = await bcrypt.hash(password, 10)
@@ -18,7 +18,7 @@ exports.register_user = asyncHandler(async (req, res, next) => {
   res.status(201).json({ message: 'User successfully created' })
 })
 
-exports.login_user = asyncHandler(async (req, res, next) => {
+exports.login_user = asyncHandler(async (req, res) => {
   const { email, password } = req.body
 
   const user = await User.findOne({ email })
@@ -45,7 +45,7 @@ exports.login_user = asyncHandler(async (req, res, next) => {
   res.status(200).json({ token, email })
 })
 
-exports.update_profile = asyncHandler(async (req, res, next) => {
+exports.update_profile = asyncHandler(async (req, res) => {
   const { email } = req.userData
   const {
     totalFocusMinutes,
@@ -92,7 +92,7 @@ exports.update_profile = asyncHandler(async (req, res, next) => {
   })
 })
 
-exports.get_profile = asyncHandler(async (req, res, next) => {
+exports.get_profile = asyncHandler(async (req, res) => {
   const { email } = req.userData
   const userProfile = await User.findOne({
     email
