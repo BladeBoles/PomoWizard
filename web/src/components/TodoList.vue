@@ -24,18 +24,21 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
+const emit = defineEmits(['todo-completed'])
 const todos = ref([{ name: 'Todo 1' }, { name: 'Todo 2' }, { name: 'Todo 3' }])
 const newTodo = ref('Something else')
 const addTodo = () => {
   todos.value.push({ name: newTodo.value })
 }
 const completeTodo = (index) => {
-  console.log('completing todo...', index)
-  todos.value[index].completed = !todos.value[index].completed
+  const newValue = !todos.value[index].completed
+  if (newValue) {
+    emit('todo-completed')
+  }
+  todos.value[index].completed = newValue
 }
 const removeTodo = (index) => {
   todos.value.splice(index, 1)
-  console.log('removing todo...', index)
 }
 </script>
 

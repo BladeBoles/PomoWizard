@@ -33,6 +33,8 @@ const timerRunning = ref(false)
 const autoStartTimer = ref(false)
 const playTimerSounds = ref(true)
 
+const completedTodos = ref(0)
+
 const showSettings = ref(false)
 const userProfile = ref<UpdateUserProfileResponse>({})
 const timerMinutes = computed(() => {
@@ -50,6 +52,8 @@ const timerMinutes = computed(() => {
   }
   return minutes
 })
+
+const incrementTodos = () => completedTodos.value++
 
 onMounted(async () => {
   if (store.getUser.token) {
@@ -270,9 +274,13 @@ const updateSettings = (newSettings: any) => {
         <p>Total focus minutes:</p>
         <span>{{ totalFocusMinutes.toFixed(1) }}</span>
       </div>
+      <div>
+        <p>Total todos completed:</p>
+        <span>{{ completedTodos }}</span>
+      </div>
     </div>
   </div>
-  <TodoList />
+  <TodoList @todo-completed="incrementTodos" />
 </template>
 <style scoped>
 .home-view__header {
