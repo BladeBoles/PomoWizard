@@ -6,7 +6,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import AuthServices from '@/services/AuthServices'
 import { RouterLink } from 'vue-router'
-
+import TodoList from '@/components/TodoList.vue'
 interface UpdateUserProfileResponse {
   focusMinutes?: Number
   totalPomodoros?: Number
@@ -272,6 +272,7 @@ const updateSettings = (newSettings: any) => {
       </div>
     </div>
   </div>
+  <TodoList />
 </template>
 <style scoped>
 .home-view__header {
