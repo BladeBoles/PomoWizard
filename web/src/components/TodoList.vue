@@ -24,20 +24,28 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
+interface Todo {
+  name: string
+  completed?: boolean
+}
 const emit = defineEmits(['todo-completed'])
-const todos = ref([{ name: 'Todo 1' }, { name: 'Todo 2' }, { name: 'Todo 3' }])
+const todos = ref<Todo[]>([
+  { name: 'Todo 1' },
+  { name: 'Todo 2' },
+  { name: 'Todo 3' }
+])
 const newTodo = ref('Something else')
 const addTodo = () => {
   todos.value.push({ name: newTodo.value })
 }
-const completeTodo = (index) => {
+const completeTodo = (index: number) => {
   const newValue = !todos.value[index].completed
   if (newValue) {
     emit('todo-completed')
   }
   todos.value[index].completed = newValue
 }
-const removeTodo = (index) => {
+const removeTodo = (index: number) => {
   todos.value.splice(index, 1)
 }
 </script>
@@ -48,27 +56,33 @@ const removeTodo = (index) => {
   align-self: center;
   color: green;
 }
+
 .todo-list__remove-item-button {
   align-self: center;
   color: red;
 }
+
 .fa-square-check {
   font-size: 20px;
   width: 100%;
   margin-left: 10px;
   align-self: center;
 }
+
 .todo-list__item {
   display: flex;
   flex-direction: row;
 }
+
 .todo-list__add-todo-area {
   display: flex;
   margin-bottom: 10px;
 }
+
 .todo-list__add-button {
   margin-left: 10px;
 }
+
 .todo-list__container {
   display: flex;
   flex-direction: column;
