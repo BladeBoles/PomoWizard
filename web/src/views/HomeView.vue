@@ -5,7 +5,6 @@ import SettingsModal from '@/modals/SettingsModal.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import AuthServices from '@/services/AuthServices'
-import TodoServices from '@/services/TodoServices'
 import { RouterLink } from 'vue-router'
 import TodoList from '@/components/TodoList.vue'
 interface UpdateUserProfileResponse {

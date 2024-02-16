@@ -1,7 +1,7 @@
 <template>
   <div class="todo-list__container">
     <div class="todo-list__add-todo-area">
-      <input type="text" v-model="newTodo" />
+      <input type="text" v-model="newTodo.name" />
       <button class="todo-list__add-button" @click="addTodo">Add Todo</button>
     </div>
 
@@ -26,32 +26,60 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, warn, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 import TodoServices from '@/services/TodoServices'
 
 interface Todo {
   name: string
-  completed?: boolean
+  completed: boolean
+  description?: string
+  _id?: string
+  dateCompleted?: Date
 }
 const emit = defineEmits(['todo-completed'])
 const todos = ref<Todo[]>([])
-const newTodo = ref('Something else')
-const addTodo = () => {
-  todos.value.push({ name: newTodo.value })
+const newTodo = ref<Todo>({
+  name: 'New Todo',
+  completed: false
+})
+const addTodo = async () => {
+  const response = await TodoServices.createTodo(newTodo.value)
+  if (response.data) {
+    todos.value = response.data
+  } else {
+    console.error('No todo added?!?')
+  }
 }
-const completeTodo = (index: number) => {
+const completeTodo = async (index: number) => {
   const newValue = !todos.value[index].completed
   if (newValue) {
     emit('todo-completed')
   }
   todos.value[index].completed = newValue
+  const response = await TodoServices.updateTodos(todos.value)
+  if (response.data) {
+    todos.value = response.data
+  } else {
+    console.error('No todo added?!?')
+  }
 }
-const removeTodo = (index: number) => {
+const removeTodo = async (index: number) => {
   todos.value.splice(index, 1)
+  const response = await TodoServices.updateTodos(todos.value)
+  if (response.data) {
+    todos.value = response.data
+  } else {
+    console.error('No todo added?!?')
+  }
 }
-onMounted(async() => {
-const currentTodos = TodoServices.
+onMounted(async () => {
+  const response = await TodoServices.getTodos()
+  if (response.data) {
+    todos.value = response.data
+  } else {
+    console.error('No todos found?!?')
+  }
 })
 </script>
 

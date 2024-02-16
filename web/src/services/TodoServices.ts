@@ -1,7 +1,11 @@
 import axios from 'axios'
+import { useUserStore } from '../stores/user'
+const store = useUserStore()
+const { token } = store.getUser()
+
 interface Todo {
   name: string
-  description: string
+  description?: string
   completed: boolean
   completedDate?: Date
 }
@@ -22,14 +26,14 @@ export default {
   createTodo: async (todo: Todo) => {
     const response = await axios.post<ResponseTodo[]>(
       `${import.meta.env.VITE_API_HOST}/api/todos/create`,
-      { ...todo },
+      { todo },
       {
         headers: { Authorization: `Bearer ${token}` }
       }
     )
     return response
   },
-  updateTodos: async (token: string, email: string, todos: Todo[]) => {
+  updateTodos: async (todos: Todo[]) => {
     const response = await axios.post<ResponseTodo[]>(
       `${import.meta.env.VITE_API_HOST}/api/todos/update`,
       { todos },

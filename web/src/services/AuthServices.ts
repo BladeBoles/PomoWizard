@@ -1,5 +1,9 @@
 import axios from 'axios'
 
+import { useUserStore } from '../stores/user'
+const store = useUserStore()
+const { token } = store.getUser()
+
 interface UpdateFields {
   totalFocusMinutes?: number
   totalPomodoros?: number
@@ -38,11 +42,7 @@ export default {
     return response
   },
 
-  updateUserProfile: async (
-    token: string,
-    email: string,
-    updateFields: UpdateFields
-  ) => {
+  updateUserProfile: async (updateFields: UpdateFields) => {
     const {
       totalFocusMinutes,
       totalPomodoros,
@@ -52,7 +52,6 @@ export default {
     const response = await axios.post<UpdateUserProfileResponse>(
       `${import.meta.env.VITE_API_HOST}/api/users/profile`,
       {
-        email,
         totalFocusMinutes,
         totalPomodoros,
         pomodorosSinceLongBreak,
@@ -63,7 +62,7 @@ export default {
     return response
   },
 
-  getUserProfile: async (token: string) => {
+  getUserProfile: async () => {
     const response = await axios.get(
       `${import.meta.env.VITE_API_HOST}/api/users/profile`,
       {
