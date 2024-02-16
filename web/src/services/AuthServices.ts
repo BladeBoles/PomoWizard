@@ -1,9 +1,6 @@
 import axios from 'axios'
 
 import { useUserStore } from '../stores/user'
-const store = useUserStore()
-const { token } = store.getUser()
-
 interface UpdateFields {
   totalFocusMinutes?: number
   totalPomodoros?: number
@@ -43,6 +40,9 @@ export default {
   },
 
   updateUserProfile: async (updateFields: UpdateFields) => {
+    const store = useUserStore()
+    const { token } = store.getUser
+
     const {
       totalFocusMinutes,
       totalPomodoros,
@@ -63,6 +63,9 @@ export default {
   },
 
   getUserProfile: async () => {
+    const store = useUserStore()
+    const { token } = store.getUser
+
     const response = await axios.get(
       `${import.meta.env.VITE_API_HOST}/api/users/profile`,
       {

@@ -1,14 +1,14 @@
 <template>
   <div class="todo-list__container">
     <div class="todo-list__add-todo-area">
-      <input type="text" v-model="newTodo.name" />
+      <input type="text" v-model="newTodo.title" />
       <button class="todo-list__add-button" @click="addTodo">Add Todo</button>
     </div>
 
     <VueDraggableNext class="todo-list__draggable" :list="todos">
       <div class="todo-list__item" v-for="(todo, index) in todos" :key="index">
         <span :class="todo.completed && 'todo-list__completed-todo'">{{
-          todo.name
+          todo.title
         }}</span>
         <span>
           <a
@@ -31,7 +31,7 @@ import { VueDraggableNext } from 'vue-draggable-next'
 import TodoServices from '@/services/TodoServices'
 
 interface Todo {
-  name: string
+  title: string
   completed: boolean
   description?: string
   _id?: string
@@ -40,7 +40,7 @@ interface Todo {
 const emit = defineEmits(['todo-completed'])
 const todos = ref<Todo[]>([])
 const newTodo = ref<Todo>({
-  name: 'New Todo',
+  title: 'New Todo',
   completed: false
 })
 const addTodo = async () => {

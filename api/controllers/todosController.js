@@ -17,8 +17,9 @@ exports.getAll = asyncHandler(async (req, res) => {
   }
 })
 exports.create = asyncHandler(async (req, res) => {
+  console.log('req.body', req.body)
   const { email } = req.userData
-  const { title, description, completed, dateCompleted } = req.body
+  const { title, description, completed, dateCompleted } = req.body.todo
   const newTodo = { title, description, completed, dateCompleted }
   try {
     const todoOwner = await User.findOne({
