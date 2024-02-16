@@ -37,7 +37,26 @@ const userSchema = new Schema({
   specialty: {
     type: String,
     default: 'Fire Mage'
-  }
+  },
+  todos: [
+    {
+      title: String,
+      description: String,
+      completed: {
+        type: Boolean,
+        default: false
+      },
+      dateCompleted: Date
+    }
+  ],
+  history: [
+    {
+      day: Date,
+      totalPomodoros: Number,
+      totalFocusMinutes: Number,
+      totalStopwatchSessions: Number
+    }
+  ]
 })
 
 const User = model('User', userSchema)
