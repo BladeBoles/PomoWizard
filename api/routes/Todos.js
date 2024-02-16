@@ -8,30 +8,44 @@ router.post('/todos/create', authMiddleware, async (req, res) => {
   const { email } = req.userData
   const { title, description, completed, dateCompleted } = req.body
   const newTodo = { title, description, completed, dateCompleted }
+  try {
+    const todoOwner = await User.findOne({
+      email
+    })
+    if (!todoOwner) {
+      return res.status(404).json({ message: 'User not found' })
+    }
 
-  const todoOwner = await User.findOne({
-    email
-  })._id
+    todoOwner.todos.push(newTodo)
 
-  const updatedTodos = todoOwner.todos.push(newTodo)
+    const updatedUser = await todoOwner.save()
 
-  await User.updateOne({ email }, { todos: updatedTodos })
-  res.json({
-    ...newTodo
-  })
+    res.json(updatedUser.todos)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'An error occurred' })
+  }
 })
-router.post('/todos/update', authMiddleware, async (req, res) => {
+router.post('/todos/updateAll', authMiddleware, async (req, res) => {
   const { email } = req.userData
-  const { title, description, dateCompleted } = req.body
-
-  const todoOwner = await User.findOne({
-    email
-  })._id
-  await Todo.create({ owner: todoOwner, title, description, dateCompleted })
-  const newTodo = Todo.findOne({ title, description })
-
-  res.json({
-    ...newTodo
-  })
+  const { todos } = req.body
+  try {
+    const result = await User.findOneAndUpdate(
+      {
+        email
+      },
+      {
+        $set: { todos }
+      },
+      { new: true }
+    )
+    if (!result) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+    result.json(result.todos)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'An error occurred' })
+  }
 })
 module.exports = router
