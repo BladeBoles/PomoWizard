@@ -15,6 +15,7 @@ interface UpdateUserProfileResponse {
   level?: Number
   specialty?: String
 }
+
 export default {
   signUserUp: async (email: string, password: string) => {
     const response = await axios.post(
@@ -36,6 +37,7 @@ export default {
     )
     return response
   },
+
   updateUserProfile: async (
     token: string,
     email: string,
@@ -60,6 +62,7 @@ export default {
     )
     return response
   },
+
   getUserProfile: async (token: string) => {
     const response = await axios.get(
       `${import.meta.env.VITE_API_HOST}/api/users/profile`,

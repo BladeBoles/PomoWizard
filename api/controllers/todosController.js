@@ -1,6 +1,21 @@
 const User = require('../models/User')
 const asyncHandler = require('express-async-handler')
 
+exports.getAll = asyncHandler(async (req, res) => {
+  const { email } = req.userData
+  try {
+    const todoOwner = await User.findOne({
+      email
+    })
+    if (!todoOwner) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+    res.json(todoOwner.todos)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'An error occurred' })
+  }
+})
 exports.create = asyncHandler(async (req, res) => {
   const { email } = req.userData
   const { title, description, completed, dateCompleted } = req.body

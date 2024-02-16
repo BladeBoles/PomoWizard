@@ -4,6 +4,7 @@ const todos_controller = require('../controllers/todosController')
 
 const router = Router()
 
+router.get('/todos', authMiddleware, todos_controller.getAll)
 router.post('/todos/create', authMiddleware, todos_controller.create)
 router.post('/todos/updateAll', authMiddleware, todos_controller.updateAll)
 module.exports = router

@@ -10,30 +10,32 @@
         <span :class="todo.completed && 'todo-list__completed-todo'">{{
           todo.name
         }}</span>
-        <a @click="completeTodo(index)" class="todo-list__complete-item-button">
-          <i class="fa-solid fa-check"> </i>
-        </a>
-        <a @click="removeTodo(index)" class="todo-list__remove-item-button">
-          <i class="fa-solid fa-xmark"> </i>
-        </a>
+        <span>
+          <a
+            @click="completeTodo(index)"
+            class="todo-list__complete-item-button"
+          >
+            <i class="fa-solid fa-check"> </i>
+          </a>
+          <a @click="removeTodo(index)" class="todo-list__remove-item-button">
+            <i class="fa-solid fa-xmark"> </i> </a
+        ></span>
       </div>
     </VueDraggableNext>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, warn, onMounted } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
+import TodoServices from '@/services/TodoServices'
+
 interface Todo {
   name: string
   completed?: boolean
 }
 const emit = defineEmits(['todo-completed'])
-const todos = ref<Todo[]>([
-  { name: 'Todo 1' },
-  { name: 'Todo 2' },
-  { name: 'Todo 3' }
-])
+const todos = ref<Todo[]>([])
 const newTodo = ref('Something else')
 const addTodo = () => {
   todos.value.push({ name: newTodo.value })
@@ -48,6 +50,9 @@ const completeTodo = (index: number) => {
 const removeTodo = (index: number) => {
   todos.value.splice(index, 1)
 }
+onMounted(async() => {
+const currentTodos = TodoServices.
+})
 </script>
 
 <style scoped>
@@ -72,6 +77,11 @@ const removeTodo = (index: number) => {
 .todo-list__item {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  width: 300px;
+  min-height: 40px;
+  align-items: center;
+  font-size: 20px;
 }
 
 .todo-list__add-todo-area {
