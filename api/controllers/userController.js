@@ -51,7 +51,8 @@ exports.update_profile = asyncHandler(async (req, res) => {
     totalFocusMinutes,
     totalPomodoros,
     pomodorosSinceLongBreak,
-    totalStopwatchSessions
+    totalStopwatchSessions,
+    totalTodosCompleted
   } = req.body
 
   const currentUser = await User.findOne({
@@ -59,9 +60,12 @@ exports.update_profile = asyncHandler(async (req, res) => {
   })
   const newTotalExperience =
     currentUser.experiencePoints +
-    (totalFocusMinutes
+    ((totalFocusMinutes
       ? totalFocusMinutes - currentUser.totalFocusMinutes
-      : 0) *
+      : 0) +
+      (totalTodosCompleted
+        ? totalTodosCompleted - currentUser.totalTodosCompleted
+        : 0)) *
       10
   const newLevel = parseInt((newTotalExperience + 1000) / 1000)
   const updateFields = {
@@ -72,6 +76,9 @@ exports.update_profile = asyncHandler(async (req, res) => {
     }),
     ...(typeof totalStopwatchSessions === 'number' && {
       totalStopwatchSessions
+    }),
+    ...(typeof totalTodosCompleted === 'number' && {
+      totalTodosCompleted
     }),
     experiencePoints: newTotalExperience,
     level: newLevel

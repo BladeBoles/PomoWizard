@@ -22,6 +22,10 @@ const userSchema = new Schema({
     type: Number,
     default: 0
   },
+  totalTodosCompleted: {
+    type: Number,
+    default: 0
+  },
   pomodorosSinceLongBreak: {
     type: Number,
     default: 0
