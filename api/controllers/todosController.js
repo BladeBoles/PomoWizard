@@ -56,7 +56,7 @@ exports.updateAll = asyncHandler(async (req, res) => {
     if (!result) {
       return res.status(404).json({ message: 'User not found' })
     }
-    result.json(result.todos)
+    res.json(result.todos)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'An error occurred' })
