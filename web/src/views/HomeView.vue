@@ -57,9 +57,7 @@ const incrementTodos = () => completedTodos.value++
 
 onMounted(async () => {
   if (store.getUser.token) {
-    const userProfileResponse = await AuthServices.getUserProfile(
-      store.getUser.token
-    )
+    const userProfileResponse = await AuthServices.getUserProfile()
     userProfile.value = userProfileResponse.data
     finishedPomos.value = userProfileResponse.data.totalPomodoros
   }
@@ -67,18 +65,14 @@ onMounted(async () => {
 
 const updateUser = async () => {
   if (store.getUser.email && store.getUser.token) {
-    const updatedUser = await AuthServices.updateUserProfile(
-      store.getUser.token,
-      store.getUser.email,
-      {
-        totalPomodoros: store.getUser.totalPomodoros
-          ? store.getUser.totalPomodoros + 1
-          : finishedPomos.value,
-        totalFocusMinutes:
-          store.getUser?.totalFocusMinutes ?? totalFocusMinutes.value,
-        pomodorosSinceLongBreak: pomosSinceLastLongBreak.value
-      }
-    )
+    const updatedUser = await AuthServices.updateUserProfile({
+      totalPomodoros: store.getUser.totalPomodoros
+        ? store.getUser.totalPomodoros + 1
+        : finishedPomos.value,
+      totalFocusMinutes:
+        store.getUser?.totalFocusMinutes ?? totalFocusMinutes.value,
+      pomodorosSinceLongBreak: pomosSinceLastLongBreak.value
+    })
     userProfile.value = updatedUser.data
   }
 }
