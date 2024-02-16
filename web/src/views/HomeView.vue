@@ -2,11 +2,11 @@
 import GenericTimer from '@/components/GenericTimer.vue'
 import GenericStopwatch from '@/components/GenericStopwatch.vue'
 import SettingsModal from '@/modals/SettingsModal.vue'
-import { ref, computed, onMounted, warn } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import AuthServices from '@/services/AuthServices'
 import { RouterLink } from 'vue-router'
-
+import TodoList from '@/components/TodoList.vue'
 interface UpdateUserProfileResponse {
   focusMinutes?: Number
   totalPomodoros?: Number
@@ -33,6 +33,8 @@ const timerRunning = ref(false)
 const autoStartTimer = ref(false)
 const playTimerSounds = ref(true)
 
+const completedTodos = ref(0)
+
 const showSettings = ref(false)
 const userProfile = ref<UpdateUserProfileResponse>({})
 const timerMinutes = computed(() => {
@@ -50,6 +52,8 @@ const timerMinutes = computed(() => {
   }
   return minutes
 })
+
+const incrementTodos = () => completedTodos.value++
 
 onMounted(async () => {
   if (store.getUser.token) {
@@ -270,9 +274,13 @@ const updateSettings = (newSettings: any) => {
         <p>Total focus minutes:</p>
         <span>{{ totalFocusMinutes.toFixed(1) }}</span>
       </div>
+      <div>
+        <p>Total todos completed:</p>
+        <span>{{ completedTodos }}</span>
+      </div>
     </div>
-    <div>User Profile: {{ userProfile }}</div>
   </div>
+  <TodoList @todo-completed="incrementTodos" />
 </template>
 <style scoped>
 .home-view__header {

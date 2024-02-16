@@ -1,5 +1,8 @@
-/* eslint-env node */
 module.exports = {
+  env: {
+    node: true, // This enables Node.js global variables
+    es2021: true // Assuming you're using ES2021 features; adjust as needed
+  },
   root: true,
   extends: [
     'plugin:vue/vue3-essential',
@@ -17,6 +20,7 @@ module.exports = {
     ecmaVersion: 'latest'
   },
   rules: {
-    semi: [2, 'never']
+    semi: [2, 'never'],
+    'import/no-commonjs': 'off'
   }
 }

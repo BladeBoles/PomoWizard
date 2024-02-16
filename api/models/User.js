@@ -22,6 +22,10 @@ const userSchema = new Schema({
     type: Number,
     default: 0
   },
+  totalTodosCompleted: {
+    type: Number,
+    default: 0
+  },
   pomodorosSinceLongBreak: {
     type: Number,
     default: 0
@@ -37,10 +41,28 @@ const userSchema = new Schema({
   specialty: {
     type: String,
     default: 'Fire Mage'
-  }
+  },
+  todos: [
+    {
+      title: String,
+      description: String,
+      completed: {
+        type: Boolean,
+        default: false
+      },
+      dateCompleted: Date
+    }
+  ],
+  history: [
+    {
+      day: Date,
+      totalPomodoros: Number,
+      totalFocusMinutes: Number,
+      totalStopwatchSessions: Number
+    }
+  ]
 })
 
 const User = model('User', userSchema)
 
 module.exports = User
-
