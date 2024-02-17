@@ -60,7 +60,7 @@ exports.login_user = asyncHandler(async (req, res) => {
   res.cookie('token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: 'None',
     expires: new Date(Date.now() + 36000000) // Cookie expiration set to match token expiration (1 hour)
   })
 
