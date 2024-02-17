@@ -2,7 +2,7 @@ const User = require('../models/User')
 const asyncHandler = require('express-async-handler')
 
 exports.getAll = asyncHandler(async (req, res) => {
-  const { email } = req.userData
+  const { email } = req.user
   try {
     const todoOwner = await User.findOne({
       email
@@ -18,7 +18,7 @@ exports.getAll = asyncHandler(async (req, res) => {
 })
 exports.create = asyncHandler(async (req, res) => {
   console.log('req.body', req.body)
-  const { email } = req.userData
+  const { email } = req.user
   const { title, description, completed, dateCompleted } = req.body.todo
   const newTodo = { title, description, completed, dateCompleted }
   try {
@@ -41,7 +41,7 @@ exports.create = asyncHandler(async (req, res) => {
 })
 
 exports.updateAll = asyncHandler(async (req, res) => {
-  const { email } = req.userData
+  const { email } = req.user
   const { todos } = req.body
   try {
     const result = await User.findOneAndUpdate(

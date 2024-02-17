@@ -56,7 +56,8 @@ const timerMinutes = computed(() => {
 const incrementTodos = () => completedTodos.value++
 
 onMounted(async () => {
-  if (store.getUser.token) {
+  await store.checkAuthentication()
+  if (store.getIsAuthenticated) {
     const userProfileResponse = await AuthServices.getUserProfile()
     userProfile.value = userProfileResponse.data
     finishedPomos.value = userProfileResponse.data.totalPomodoros
@@ -64,7 +65,7 @@ onMounted(async () => {
 })
 
 const updateUser = async () => {
-  if (store.getUser.email && store.getUser.token) {
+  if (store.getUser.email && store.getIsAuthenticated) {
     const updatedUser = await AuthServices.updateUserProfile({
       totalPomodoros: store.getUser.totalPomodoros
         ? store.getUser.totalPomodoros + 1
@@ -162,7 +163,7 @@ const updateSettings = (newSettings: any) => {
           <span class="home-view__settings-word">Settings</span>
         </button>
         <button class="home-view__settings-button">
-          <RouterLink v-if="!store.getUser.token" to="/login">
+          <RouterLink v-if="!store.getIsAuthenticated" to="/login">
             <i class="fa-solid fa-sign-in"></i>
             <span class="home-view__settings-word"> Login </span>
           </RouterLink>
@@ -179,7 +180,7 @@ const updateSettings = (newSettings: any) => {
       @update="(settings) => updateSettings(settings)"
       v-if="showSettings"
     />
-    <template v-if="store.getUser.token">
+    <template v-if="store.getIsAuthenticated">
       <h3>Hello {{ store.getUser.email }}</h3>
       <h4>
         <span v-if="userProfile.level || userProfile.specialty">Level</span>

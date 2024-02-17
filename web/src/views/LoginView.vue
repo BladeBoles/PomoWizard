@@ -31,9 +31,9 @@ const logIn = async () => {
       loginEmail.value,
       loginPassword.value
     )
-    console.log('log in response is', logInResponse)
-    store.saveUser(logInResponse.data)
-    if (store.getUser?.token) {
+    if (logInResponse.status === 200) {
+      store.saveUser(logInResponse.data)
+      await store.checkAuthentication()
       router.push({
         name: 'home'
       })

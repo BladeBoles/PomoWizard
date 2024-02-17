@@ -1,13 +1,27 @@
 const jwt = require('jsonwebtoken')
 
 module.exports = (req, res, next) => {
+  const token = req.cookies['token']
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: 'Access denied. No token provided.' })
+  }
+
   try {
-    const token = req.headers.authorization.split(" ")[1]
     const decoded = jwt.verify(token, 'secretkey')
-    req.userData = { userId: decoded.userId, email: decoded.email }
+    req.user = decoded
     next()
   } catch (err) {
-    console.error(err)
-    res.status(401).json({ message: 'Authentication failed' })
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token expired.' })
+    } else if (err.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid token.' })
+    } else {
+      return res
+        .status(500)
+        .json({ message: 'An error occurred while verifying the token.' })
+    }
   }
 }
+

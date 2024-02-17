@@ -1,6 +1,5 @@
 import axios from 'axios'
 
-import { useUserStore } from '../stores/user'
 interface UpdateFields {
   totalFocusMinutes?: number
   totalPomodoros?: number
@@ -17,7 +16,19 @@ interface UpdateUserProfileResponse {
   specialty?: String
 }
 
+axios.defaults.withCredentials = true
 export default {
+  checkAuthStatus: async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_HOST}/api/users/validate`
+      )
+      console.log('response is: ', response)
+      return response.data.valid
+    } catch (error) {
+      return false
+    }
+  },
   signUserUp: async (email: string, password: string) => {
     const response = await axios.post(
       `${import.meta.env.VITE_API_HOST}/api/users/register`,
@@ -40,9 +51,6 @@ export default {
   },
 
   updateUserProfile: async (updateFields: UpdateFields) => {
-    const store = useUserStore()
-    const { token } = store.getUser
-
     const {
       totalFocusMinutes,
       totalPomodoros,
@@ -56,21 +64,14 @@ export default {
         totalPomodoros,
         pomodorosSinceLongBreak,
         totalStopwatchSessions
-      },
-      { headers: { Authorization: `Bearer ${token}` } }
+      }
     )
     return response
   },
 
   getUserProfile: async () => {
-    const store = useUserStore()
-    const { token } = store.getUser
-
     const response = await axios.get(
-      `${import.meta.env.VITE_API_HOST}/api/users/profile`,
-      {
-        headers: { Authorization: `Bearer ${token}` }
-      }
+      `${import.meta.env.VITE_API_HOST}/api/users/profile`
     )
     return response
   }

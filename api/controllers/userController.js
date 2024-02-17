@@ -3,6 +3,21 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 
+exports.validate_user = asyncHandler(async (req, res) => {
+  try {
+    const token = req.cookies['token']
+    if (!token) {
+      return res.status(401).json({ message: 'No session' })
+    }
+    const decoded = jwt.verify(token, 'secretkey')
+    if (decoded) {
+      return res.status(200).json({ valid: true })
+    }
+  } catch (error) {
+    return res.status(401).json({ valid: false })
+  }
+})
+
 exports.register_user = asyncHandler(async (req, res) => {
   const { email, password } = req.body
 
@@ -38,15 +53,22 @@ exports.login_user = asyncHandler(async (req, res) => {
       userId: user._id,
       email: user.email
     },
-    'secretkey',
-    { expiresIn: '1h' }
+    'secretkey', // TODO: Consider using an environment variable for the secret
+    { expiresIn: '10h' }
   )
 
-  res.status(200).json({ token, email })
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    expires: new Date(Date.now() + 36000000) // Cookie expiration set to match token expiration (1 hour)
+  })
+
+  res.status(200).json({ message: 'Login successful', email })
 })
 
 exports.update_profile = asyncHandler(async (req, res) => {
-  const { email } = req.userData
+  const { email } = req.user
   const {
     totalFocusMinutes,
     totalPomodoros,
@@ -100,7 +122,7 @@ exports.update_profile = asyncHandler(async (req, res) => {
 })
 
 exports.get_profile = asyncHandler(async (req, res) => {
-  const { email } = req.userData
+  const { email } = req.user
   const userProfile = await User.findOne({
     email
   })
