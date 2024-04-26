@@ -58,18 +58,33 @@ const saveChanges = () => {
         <ul class="settings-modal__timer-settings">
           <li class="settings-modal__timer-setting-item">
             <label for="pomo-timer-length">Pomodoro</label>
-            <input class="settings-modal__timer-length-input" :disabled="timerRunning" id="pomo-timer-length"
-              type="number" v-model="localSettings.pomodoroTimerMinutes" />
+            <input
+              class="settings-modal__timer-length-input"
+              :disabled="timerRunning"
+              id="pomo-timer-length"
+              type="number"
+              v-model="localSettings.pomodoroTimerMinutes"
+            />
           </li>
           <li class="settings-modal__timer-setting-item">
             <label for="short-timer-length">Short Break</label>
-            <input class="settings-modal__timer-length-input" :disabled="timerRunning" id="short-timer-length"
-              type="number" v-model="localSettings.shortBreakTimerMinutes" />
+            <input
+              class="settings-modal__timer-length-input"
+              :disabled="timerRunning"
+              id="short-timer-length"
+              type="number"
+              v-model="localSettings.shortBreakTimerMinutes"
+            />
           </li>
           <li class="settings-modal__timer-setting-item">
             <label for="long-timer-length">Long Break</label>
-            <input class="settings-modal__timer-length-input" :disabled="timerRunning" id="long-timer-length"
-              type="number" v-model="localSettings.longBreakTimerMinutes" />
+            <input
+              class="settings-modal__timer-length-input"
+              :disabled="timerRunning"
+              id="long-timer-length"
+              type="number"
+              v-model="localSettings.longBreakTimerMinutes"
+            />
           </li>
         </ul>
       </fieldset>
@@ -77,18 +92,33 @@ const saveChanges = () => {
         <legend class="settings-modal__legend">Other Settings</legend>
         <ul class="settings-modal__other-settings">
           <li>
-            <input type="checkbox" v-model="localSettings.autoStartTimer" name="auto-start" id="auto-start" />
+            <input
+              type="checkbox"
+              v-model="localSettings.autoStartTimer"
+              name="auto-start"
+              id="auto-start"
+            />
             <label for="auto-start">Automatically start timers</label>
           </li>
           <li>
             <h4>Timer sounds:</h4>
             <div class="settings-modal__sound-toggle">
               <div>
-                <input id="on" :value="true" type="radio" v-model="localSettings.playTimerSounds" />
+                <input
+                  id="on"
+                  :value="true"
+                  type="radio"
+                  v-model="localSettings.playTimerSounds"
+                />
                 <label class="sounds-label" for="on">On</label>
               </div>
               <div>
-                <input id="off" :value="false" type="radio" v-model="localSettings.playTimerSounds" />
+                <input
+                  id="off"
+                  :value="false"
+                  type="radio"
+                  v-model="localSettings.playTimerSounds"
+                />
                 <label class="sounds-label" for="off">Off</label>
               </div>
             </div>
@@ -103,7 +133,7 @@ const saveChanges = () => {
 </template>
 
 <style scoped>
-input[type="radio"] {
+input[type='radio'] {
   display: none;
 }
 
@@ -117,17 +147,17 @@ input[type="radio"] {
   transition: background-color 0.3s;
 }
 
-input[type="radio"]:checked+.sounds-label {
+input[type='radio']:checked + .sounds-label {
   background-color: #4caf50;
   color: white;
 }
 
-li>div {
+li > div {
   display: inline-block;
 }
 
 h4,
-li>div {
+li > div {
   display: inline-block;
   vertical-align: middle;
   margin-right: 8px;

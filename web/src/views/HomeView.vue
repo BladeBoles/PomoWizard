@@ -15,6 +15,7 @@ interface UpdateUserProfileResponse {
   experiencePoints?: Number
   level?: Number
   specialty?: String
+  totalTodosCompleted?: Number
 }
 const store = useUserStore()
 
@@ -72,7 +73,8 @@ const updateUser = async () => {
         : finishedPomos.value,
       totalFocusMinutes:
         store.getUser?.totalFocusMinutes ?? totalFocusMinutes.value,
-      pomodorosSinceLongBreak: pomosSinceLastLongBreak.value
+      pomodorosSinceLongBreak: pomosSinceLastLongBreak.value,
+      totalTodosCompleted: completedTodos.value
     })
     userProfile.value = updatedUser.data
   }
@@ -255,7 +257,7 @@ const updateSettings = (newSettings: any) => {
     <div class="home-view__info-section">
       <div>
         <p>Total pomodoros:</p>
-        <span>{{ finishedPomos }}</span>
+        <span>{{ userProfile.totalPomodoros }}</span>
       </div>
       <div>
         <p>Pomos since long break:</p>
@@ -263,15 +265,15 @@ const updateSettings = (newSettings: any) => {
       </div>
       <div>
         <p>Total stopwatch sessions:</p>
-        <span>{{ totalFocusSessions }}</span>
+        <span>{{ userProfile.totalStopwatchSessions }}</span>
       </div>
       <div>
         <p>Total focus minutes:</p>
-        <span>{{ totalFocusMinutes.toFixed(1) }}</span>
+        <span>{{ userProfile.focusMinutes?.toFixed(1) || 0 }}</span>
       </div>
       <div>
         <p>Total todos completed:</p>
-        <span>{{ completedTodos }}</span>
+        <span>{{ userProfile.totalTodosCompleted || 0 }}</span>
       </div>
     </div>
   </div>

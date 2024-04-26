@@ -12,12 +12,10 @@ exports.getAll = asyncHandler(async (req, res) => {
     }
     res.json(todoOwner.todos)
   } catch (error) {
-    console.error(error)
     res.status(500).json({ message: 'An error occurred' })
   }
 })
 exports.create = asyncHandler(async (req, res) => {
-  console.log('req.body', req.body)
   const { email } = req.user
   const { title, description, completed, dateCompleted } = req.body.todo
   const newTodo = { title, description, completed, dateCompleted }
@@ -35,7 +33,6 @@ exports.create = asyncHandler(async (req, res) => {
 
     res.json(updatedUser.todos)
   } catch (error) {
-    console.error(error)
     res.status(500).json({ message: 'An error occurred' })
   }
 })

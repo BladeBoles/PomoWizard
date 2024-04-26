@@ -117,7 +117,8 @@ exports.update_profile = asyncHandler(async (req, res) => {
     totalStopwatchSessions: updatedUser.totalStopwatchSessions,
     experiencePoints: updatedUser.experiencePoints,
     level: updatedUser.level,
-    specialty: updatedUser.specialty
+    specialty: updatedUser.specialty,
+    totalTodosCompleted: updatedUser.totalTodosCompleted
   })
 })
 

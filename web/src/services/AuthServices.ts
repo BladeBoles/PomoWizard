@@ -5,6 +5,7 @@ interface UpdateFields {
   totalPomodoros?: number
   pomodorosSinceLongBreak?: number
   totalStopwatchSessions?: number
+  totalTodosCompleted?: number
 }
 interface UpdateUserProfileResponse {
   focusMinutes?: Number
@@ -14,6 +15,7 @@ interface UpdateUserProfileResponse {
   experiencePoints?: Number
   level?: Number
   specialty?: String
+  totalTodosCompleted?: Number
 }
 
 axios.defaults.withCredentials = true
@@ -55,7 +57,8 @@ export default {
       totalFocusMinutes,
       totalPomodoros,
       pomodorosSinceLongBreak,
-      totalStopwatchSessions
+      totalStopwatchSessions,
+      totalTodosCompleted
     } = updateFields
     const response = await axios.post<UpdateUserProfileResponse>(
       `${import.meta.env.VITE_API_HOST}/api/users/profile`,
@@ -63,12 +66,12 @@ export default {
         totalFocusMinutes,
         totalPomodoros,
         pomodorosSinceLongBreak,
-        totalStopwatchSessions
+        totalStopwatchSessions,
+        totalTodosCompleted
       }
     )
     return response
   },
-
   getUserProfile: async () => {
     const response = await axios.get(
       `${import.meta.env.VITE_API_HOST}/api/users/profile`
