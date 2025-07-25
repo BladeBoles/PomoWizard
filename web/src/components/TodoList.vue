@@ -26,9 +26,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import { VueDraggableNext } from 'vue-draggable-next'
+
+import { onMounted, ref } from 'vue'
 import TodoServices from '@/services/TodoServices'
+import { VueDraggableNext } from 'vue-draggable-next'
 
 interface Todo {
   title: string
