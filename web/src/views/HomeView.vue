@@ -39,7 +39,7 @@ const completedTodos = ref(0)
 const showSettings = ref(false)
 const userProfile = ref<UpdateUserProfileResponse>({})
 const timerMinutes = computed(() => {
-  let minutes = 0
+  let minutes
   switch (timerType.value) {
     case 'Short Break':
       minutes = shortBreakTimerMinutes.value
@@ -179,7 +179,7 @@ const updateSettings = (newSettings: any) => {
       :short-break-timer-minutes="shortBreakTimerMinutes"
       :long-break-timer-minutes="longBreakTimerMinutes"
       :pomodoro-timer-minutes="pomodoroTimerMinutes"
-      @update="(settings) => updateSettings(settings)"
+      @update="(settings: any) => updateSettings(settings)"
       v-if="showSettings"
     />
     <template v-if="store.getIsAuthenticated">
@@ -312,7 +312,7 @@ a {
 }
 
 p {
-  margin: 0px;
+  margin: 0;
 }
 
 .home-view {

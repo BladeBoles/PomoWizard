@@ -41,14 +41,13 @@ export default {
     )
   },
   logUserIn: async (email: string, password: string) => {
-    const response = await axios.post(
+    return await axios.post(
       `${import.meta.env.VITE_API_HOST}/api/users/login`,
       {
         email,
         password
       }
     )
-    return response
   },
 
   updateUserProfile: async (updateFields: UpdateFields) => {
@@ -59,7 +58,7 @@ export default {
       totalStopwatchSessions,
       totalTodosCompleted
     } = updateFields
-    const response = await axios.post<UpdateUserProfileResponse>(
+    return await axios.post<UpdateUserProfileResponse>(
       `${import.meta.env.VITE_API_HOST}/api/users/profile`,
       {
         totalFocusMinutes,
@@ -69,12 +68,10 @@ export default {
         totalTodosCompleted
       }
     )
-    return response
   },
   getUserProfile: async () => {
-    const response = await axios.get(
+    return await axios.get(
       `${import.meta.env.VITE_API_HOST}/api/users/profile`
     )
-    return response
   }
 }
