@@ -32,14 +32,13 @@ export default {
     }
   },
   signUserUp: async (email: string, password: string) => {
-    const response = await axios.post(
+    return await axios.post(
       `${import.meta.env.VITE_API_HOST}/api/users/register`,
       {
         email,
         password
       }
     )
-    return response
   },
   logUserIn: async (email: string, password: string) => {
     const response = await axios.post(
