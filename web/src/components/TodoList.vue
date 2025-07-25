@@ -96,13 +96,6 @@ onMounted(async () => {
   color: red;
 }
 
-.fa-square-check {
-  font-size: 20px;
-  width: 100%;
-  margin-left: 10px;
-  align-self: center;
-}
-
 .todo-list__item {
   display: flex;
   flex-direction: row;
@@ -141,9 +134,5 @@ onMounted(async () => {
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
-}
-
-.todo-list__completed-todo {
-  text-decoration: line-through;
 }
 </style>
